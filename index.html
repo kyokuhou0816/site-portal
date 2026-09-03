@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>現場スケジュール & 日報管理ポータル</title>
   
-  <!-- PWA & モバイル最適化メタタグ -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -45,6 +44,7 @@
     .pb-safe {
       padding-bottom: env(safe-area-inset-bottom, 1.5rem);
     }
+    /* iPhoneのステータスバー（時計など）に被らないようにする余白 */
     .pt-safe-header {
       padding-top: max(env(safe-area-inset-top), 0.75rem);
     }
@@ -121,7 +121,6 @@
     </div>
   </header>
 
-  <!-- ================= メイン画面 ================= -->
   <main class="max-w-md mx-auto w-full px-3 pt-2 flex-1">
     
     <!-- ================= 画面1: カレンダービュー ================= -->
@@ -178,22 +177,20 @@
             </div>
           </div>
           <div class="flex items-center space-x-1.5">
-            <button onclick="autofillFromSelectedDaySchedule()" class="text-[11px] font-bold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-lg hover:bg-indigo-100 transition-colors flex items-center" title="カレンダーの選択日現場から自動セット">
+            <button onclick="autofillFromSelectedDaySchedule()" class="text-[11px] font-bold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-lg hover:bg-indigo-100 transition-colors flex items-center">
               <i class="fa-solid fa-arrow-down-long mr-1"></i> 予定から引用
             </button>
-            <button onclick="resetReportForm()" class="text-[11px] font-bold text-slate-400 hover:text-slate-600 px-2 py-1 rounded-lg">
-              クリア
-            </button>
+            <button onclick="resetReportForm()" class="text-[11px] font-bold text-slate-400 hover:text-slate-600 px-2 py-1 rounded-lg">クリア</button>
           </div>
         </div>
 
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1.5">報告班 <span class="text-rose-500">*</span></label>
           <div class="grid grid-cols-2 gap-2 text-xs">
-            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold transition-all"><input type="radio" name="formReportTeam" value="yoshii" class="text-amber-500 mr-2" checked><span>A【吉井】</span></label>
-            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold transition-all"><input type="radio" name="formReportTeam" value="kumano" class="text-emerald-500 mr-2"><span>B【熊野】</span></label>
-            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold transition-all"><input type="radio" name="formReportTeam" value="hisamoto" class="text-purple-500 mr-2"><span>C【久本】</span></label>
-            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold transition-all"><input type="radio" name="formReportTeam" value="external" class="text-slate-500 mr-2"><span>外注</span></label>
+            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold"><input type="radio" name="formReportTeam" value="yoshii" class="text-amber-500 mr-2" checked><span>A【吉井】</span></label>
+            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold"><input type="radio" name="formReportTeam" value="kumano" class="text-emerald-500 mr-2"><span>B【熊野】</span></label>
+            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold"><input type="radio" name="formReportTeam" value="hisamoto" class="text-purple-500 mr-2"><span>C【久本】</span></label>
+            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold"><input type="radio" name="formReportTeam" value="external" class="text-slate-500 mr-2"><span>外注</span></label>
           </div>
         </div>
         <div>
@@ -358,7 +355,7 @@
         <div>
           <div class="flex items-center justify-between mb-1">
             <span class="text-slate-500 font-bold"><i class="fa-solid fa-location-dot mr-1"></i>現場住所</span>
-            <button id="openMapBtn" onclick="openGoogleMapNav()" class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md flex items-center"><i class="fa-solid fa-map-location-dot mr-1"></i>マップ</button>
+            <button id="openMapBtn" onclick="openGoogleMapNav()" class="text-[10px] font-bold text-emerald-700 bg-emerald-100 hover:bg-emerald-200 px-2 py-0.5 rounded-md flex items-center"><i class="fa-solid fa-map-location-dot mr-1"></i>マップで開く</button>
           </div>
           <p id="detailLocationText" class="font-semibold text-slate-800 bg-white p-2 rounded-xl border border-slate-100"></p>
         </div>
@@ -376,11 +373,11 @@
           <input type="file" id="beforePhotoFileInput" accept="image/*" multiple class="hidden" onchange="handleBeforePhotoUpload(event)">
         </div>
         <div id="beforePhotoGrid" class="grid grid-cols-3 gap-2 min-h-[80px] p-2 bg-slate-50 border border-dashed border-slate-200 rounded-2xl items-center justify-center"></div>
-        <button id="aiPhotoAnalyzeBtn" onclick="runAiPhotoRiskAnalysis()" class="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl text-xs font-bold shadow-sm flex items-center justify-center space-x-1.5"><i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i><span>施工前写真からAIリスク診断</span></button>
+        <button id="aiPhotoAnalyzeBtn" onclick="runAiPhotoRiskAnalysis()" class="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl text-xs font-bold shadow-sm flex items-center justify-center space-x-1.5"><i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i><span>施工前写真からAI現場リスク診断</span></button>
         <div id="aiDetailRiskResult" class="hidden p-3 bg-purple-50 rounded-xl border border-purple-200 text-xs text-slate-800 space-y-1"></div>
       </div>
       <div class="pt-2 border-t border-slate-100 flex items-center justify-between space-x-2">
-        <button onclick="createReportFromSchedule(currentDetailScheduleId)" class="flex-1 py-2.5 bg-indigo-50 text-indigo-700 rounded-xl text-xs font-extrabold flex items-center justify-center"><i class="fa-solid fa-file-pen mr-1"></i>日報作成</button>
+        <button onclick="createReportFromSchedule(currentDetailScheduleId)" class="flex-1 py-2.5 bg-indigo-50 text-indigo-700 rounded-xl text-xs font-extrabold flex items-center justify-center"><i class="fa-solid fa-file-pen mr-1"></i>この現場で日報作成</button>
         <button onclick="saveScheduleDetailChanges()" class="flex-1 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-extrabold shadow-md">変更を保存</button>
       </div>
     </div>
@@ -406,11 +403,11 @@
         <div class="relative rounded-xl overflow-hidden border border-slate-200 max-h-48 bg-slate-100 flex items-center justify-center group cursor-pointer" onclick="openImageLightbox(document.getElementById('previewImage').src, 'アップロード見積書')">
           <img id="previewImage" src="" alt="プレビュー" class="object-contain max-h-48 w-full">
           <div id="aiLoadingOverlay" class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs flex flex-col items-center justify-center text-white hidden">
-            <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-emerald-400"></i><span class="text-xs font-bold">AI解析中...</span>
+            <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-emerald-400"></i><span class="text-xs font-bold">AIが見積書を解析中...</span>
           </div>
         </div>
         <div id="extractionResults" class="space-y-2.5 pt-2 hidden">
-          <div class="p-2.5 bg-emerald-50 rounded-xl border border-emerald-200 text-xs font-bold text-emerald-800"><i class="fa-solid fa-circle-check mr-1.5"></i> AI抽出完了！</div>
+          <div class="p-2.5 bg-emerald-50 rounded-xl border border-emerald-200 text-xs font-bold text-emerald-800"><i class="fa-solid fa-circle-check mr-1.5"></i> AI抽出完了！内容を確認して登録してください</div>
           <div><label class="block text-[10px] font-bold text-slate-500">割当班</label><select id="aiTeam" class="w-full text-xs border border-slate-200 rounded-lg p-2 bg-slate-50 font-bold"><option value="yoshii">A【吉井】</option><option value="kumano">B【熊野】</option><option value="hisamoto">C【久本】</option><option value="external">外注</option></select></div>
           <div><label class="block text-[10px] font-bold text-slate-500">顧客名 / 案件名</label><input id="aiCustomer" type="text" class="w-full text-xs border border-slate-200 rounded-lg p-2 bg-slate-50 font-bold text-slate-800"></div>
           <div class="grid grid-cols-2 gap-2">
@@ -424,7 +421,7 @@
           </div>
           <div><label class="block text-[10px] font-bold text-slate-500">現場住所</label><input id="aiLocation" type="text" class="w-full text-xs border border-slate-200 rounded-lg p-2 bg-slate-50"></div>
           <div><label class="block text-[10px] font-bold text-slate-500">作業内容</label><input id="aiDetail" type="text" class="w-full text-xs border border-slate-200 rounded-lg p-2 bg-slate-50"></div>
-          <button onclick="saveAiExtractedSchedule()" class="w-full py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-md">カレンダーに登録</button>
+          <button onclick="saveAiExtractedSchedule()" class="w-full py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-md">カレンダーに登録（見積価格を反映）</button>
         </div>
       </div>
     </div>
@@ -457,7 +454,7 @@
           <div><label class="block text-[10px] font-bold text-slate-500 mb-1">終了時間</label><input id="modalSchedEndTime" type="time" value="17:00" class="w-full text-xs border border-slate-200 rounded-xl p-2 bg-slate-50 font-bold"></div>
           <div><label class="block text-[10px] font-bold text-slate-500 mb-1">見積価格(円)</label><input id="modalSchedPrice" type="text" class="w-full text-xs border border-slate-200 rounded-xl p-2 bg-slate-50 font-bold"></div>
         </div>
-        <div><label class="block text-[10px] font-bold text-slate-500 mb-1">現場住所</label><input id="modalSchedLocation" type="text" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 bg-slate-50"></div>
+        <div><label class="block text-[10px] font-bold text-slate-500 mb-1">現場住所 / 詳細</label><input id="modalSchedLocation" type="text" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 bg-slate-50"></div>
         <div><label class="block text-[10px] font-bold text-slate-500 mb-1">注意事項</label><textarea id="modalSchedWarnings" rows="2" class="w-full text-xs border border-slate-200 rounded-xl p-2 bg-slate-50 resize-none"></textarea></div>
         <div class="pt-2 flex justify-end space-x-2">
           <button onclick="closeAddScheduleModal()" class="px-4 py-2.5 text-xs font-bold text-slate-500 rounded-xl">キャンセル</button>
@@ -468,7 +465,6 @@
   </div>
 
   <!-- その他のモーダル群 -->
-  <!-- オプションメニュー -->
   <div id="optionsMenuModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border border-slate-100 space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -504,12 +500,16 @@
     <span id="toastText">保存完了</span>
   </div>
 
-  <!-- ================= JavaScript ロジック ================= -->
   <script>
-    // ---------------------------------------------------------
-    // 1. APIキー & Firebase データベース設定（完成版）
-    // ---------------------------------------------------------
+    // ================= アプリケーション設定 (APIキーなど) =================
     const apiKey = "AQ.Ab8RN6KD9yzqnNql3PaPvCxZ4AAQKL1yDfZ_hIW26dprNKR24g";
+    const DEFAULT_GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzLG2r2TkJv1Yv2gp54q2Vp2n9OW78TdtISGq2kEsGcjV7m0w7SAIX5a9mHg1pWRiZJ2g/exec";
+    let gasWebhookUrl = localStorage.getItem('GAS_WEBHOOK_URL') || DEFAULT_GAS_WEBHOOK_URL;
+    
+    let editingReportId = null;
+    let editingScheduleId = null; 
+
+    // ================= データベース (Firebase) 設定 =================
     const MY_FIREBASE_CONFIG = {
       apiKey: "AIzaSyDeDPf44myhQC1wXSkxgDgzs_hMnfAP0GU",
       authDomain: "genba-app-9f529.firebaseapp.com",
@@ -527,12 +527,6 @@
     } catch(e) {
       console.warn("Firebase初期化エラー (オフライン動作になります):", e);
     }
-
-    const DEFAULT_GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzLG2r2TkJv1Yv2gp54q2Vp2n9OW78TdtISGq2kEsGcjV7m0w7SAIX5a9mHg1pWRiZJ2g/exec";
-    let gasWebhookUrl = localStorage.getItem('GAS_WEBHOOK_URL') || DEFAULT_GAS_WEBHOOK_URL;
-    
-    let editingReportId = null;
-    let editingScheduleId = null; 
 
     // --- 状態変数 ---
     const todayObj = new Date();
@@ -557,11 +551,92 @@
       external: { id: 'external', name: '外注', color: 'bg-slate-600', textCol: 'text-slate-700', bgLight: 'bg-slate-100' }
     };
 
-    // ---------------------------------------------------------
-    // 2. クラウド同期 (Firestore) & ローカル保存ロジック
-    // ---------------------------------------------------------
+    // --- ユーティリティ関数 ---
+    function initPwa() {
+      const manifest = {
+        name: "現場スケジュール & 日報管理ポータル",
+        short_name: "現場日報",
+        description: "現場のスケジュール管理・Googleフォーム連携日報システム",
+        start_url: "./",
+        display: "standalone",
+        background_color: "#f8fafc",
+        theme_color: "#0f172a",
+        icons: [{
+            src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='120' fill='%230f172a'/><path d='M368 128H144c-17.7 0-32 14.3-32 32v256c0 17.7 14.3 32 32 32h224c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32zm-16 240H160V192h192v176z' fill='%2310b981'/></svg>",
+            sizes: "512x512",
+            type: "image/svg+xml"
+        }]
+      };
+      const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+      const link = document.createElement('link');
+      link.rel = 'manifest';
+      link.href = URL.createObjectURL(blob);
+      document.head.appendChild(link);
+    }
+
+    let toastTimeout = null;
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toastText');
+      if (!toast || !toastText) return;
+      toastText.textContent = text;
+      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    function compressImageFile(file, maxWidth = 1000, quality = 0.75) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function fetchWithRetry(url, options = {}, retries = 5, backoff = 1000) {
+      try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+          if (response.status === 429 && retries > 0) {
+            await new Promise(r => setTimeout(r, backoff));
+            return fetchWithRetry(url, options, retries - 1, backoff * 2);
+          }
+          throw new Error(`HTTP Error: ${response.status}`);
+        }
+        return response;
+      } catch (err) {
+        if (retries > 0) {
+          await new Promise(r => setTimeout(r, backoff));
+          return fetchWithRetry(url, options, retries - 1, backoff * 2);
+        }
+        throw err;
+      }
+    }
+
+    // --- クラウド同期 (Firestore) & ローカル保存ロジック ---
     function loadDataFromStorage() {
-      // 1. まずローカルのデータを読み込んで最速で画面表示
+      // 1. ローカル読込
       try {
         const storedSchedules = localStorage.getItem('SCHEDULES_DATA');
         const storedReports = localStorage.getItem('REPORTS_DATA');
@@ -569,19 +644,17 @@
         if (storedReports) dailyReports = JSON.parse(storedReports);
       } catch (e) { console.warn("ローカル読込エラー"); }
 
-      // 2. クラウド同期 (自動で画面が最新に更新されます)
+      // 2. クラウド同期
       if (db) {
-        // スケジュールの同期
+        // スケジュール同期
         db.collection("schedules").onSnapshot(snapshot => {
-          // もしクラウドが空っぽで、ローカルにデータがあれば初回アップロードする
           if (snapshot.empty && schedules.length > 0) {
              schedules.forEach(s => db.collection("schedules").doc(s.id).set(s));
-          } else {
+          } else if (!snapshot.empty) {
              schedules = snapshot.docs.map(doc => doc.data());
              localStorage.setItem('SCHEDULES_DATA', JSON.stringify(schedules));
              renderAll();
              
-             // モーダルが開いている場合は中身も自動更新
              if (currentDetailScheduleId && !document.getElementById('scheduleDetailModal').classList.contains('hidden')) {
                const updated = schedules.find(s => s.id === currentDetailScheduleId);
                if (updated) {
@@ -596,11 +669,11 @@
           }
         }, err => console.warn("同期エラー:", err));
 
-        // 日報の同期
+        // 日報同期
         db.collection("reports").orderBy("createdAt", "desc").onSnapshot(snapshot => {
           if (snapshot.empty && dailyReports.length > 0) {
              dailyReports.forEach(r => db.collection("reports").doc(r.id).set({...r, createdAt: Date.now()}));
-          } else {
+          } else if (!snapshot.empty) {
              dailyReports = snapshot.docs.map(doc => doc.data());
              localStorage.setItem('REPORTS_DATA', JSON.stringify(dailyReports));
              renderReportList();
@@ -609,7 +682,6 @@
       }
     }
 
-    // クラウドなし環境用のフォールバック保存
     function saveDataToStorage() {
       try {
         localStorage.setItem('SCHEDULES_DATA', JSON.stringify(schedules));
@@ -617,9 +689,6 @@
       } catch (e) {}
     }
 
-    // ---------------------------------------------------------
-    // 3. UI レンダリングと基本機能
-    // ---------------------------------------------------------
     window.addEventListener('DOMContentLoaded', () => {
       initPwa();
       loadDataFromStorage();
@@ -654,6 +723,7 @@
       selectedDateStr = getTodayString();
       document.getElementById('formWorkDate').value = selectedDateStr;
       renderAll();
+      showToast('今日の日付に移動しました');
     }
 
     function setTeamFilter(teamId) {
@@ -699,7 +769,7 @@
 
     function createDateCell(dayNum, isOtherMonth, isSun, isSat, holidayName, dateStr, isSelected) {
       const cell = document.createElement('div');
-      cell.className = `min-h-[72px] sm:min-h-[82px] p-1 flex flex-col justify-between transition-colors relative cursor-pointer ${isOtherMonth ? 'bg-slate-50/50' : 'bg-white hover:bg-slate-50'} ${isSelected ? 'ring-2 ring-emerald-500 ring-inset bg-emerald-50/20' : ''}`;
+      cell.className = `min-h-[72px] sm:min-h-[82px] p-1 flex flex-col justify-between transition-colors relative cursor-pointer ${isOtherMonth ? 'bg-slate-50/50 text-slate-300' : 'bg-white hover:bg-slate-50 text-slate-800'} ${isSelected ? 'ring-2 ring-emerald-500 ring-inset bg-emerald-50/20' : ''}`;
       if (dateStr) cell.onclick = () => { selectedDateStr = dateStr; document.getElementById('formWorkDate').value = dateStr; renderCalendarGrid(); renderDayScheduleList(); };
 
       let textCol = 'text-slate-800';
@@ -707,10 +777,15 @@
       if (isOtherMonth) textCol = 'text-slate-300';
 
       let dayEvents = dateStr ? schedules.filter(s => isDateInRange(dateStr, s.date, s.endDate) && (currentTeamFilter === 'all' || s.teamId === currentTeamFilter)) : [];
-      let wHtml = (dateStr && weeklyWeather[dateStr] && weeklyWeather[dateStr].emoji) ? `<div class="flex flex-col ml-1 mt-0.5"><span class="text-[9px]">${weeklyWeather[dateStr].emoji}</span></div>` : '';
+      let weatherHtml = '';
+      if (dateStr && weeklyWeather[dateStr] && weeklyWeather[dateStr].emoji) {
+         let w = weeklyWeather[dateStr];
+         let popText = w.pop ? `<span class="text-[8px] ${parseInt(w.pop, 10)>=40 ? 'text-blue-500 font-extrabold' : 'text-slate-400 font-bold'} ml-0.5">${w.pop}%</span>` : '';
+         weatherHtml = `<div class="flex flex-col items-start ml-1 mt-0.5 leading-none"><span class="text-[9px] tracking-tighter">${w.emoji}</span>${popText}</div>`;
+      }
       let numHtml = dateStr === realTodayStr ? `<span class="w-5 h-5 rounded-full bg-slate-900 text-white font-bold flex items-center justify-center text-[11px]">${dayNum}</span>` : `<span class="${textCol}">${dayNum}</span>`;
 
-      cell.innerHTML = `<div><div class="flex items-start justify-between"><div class="flex items-start">${numHtml}${wHtml}</div>${dayEvents.length > 0 ? `<span class="text-[9px] text-slate-400 font-bold ml-0.5">${dayEvents.length}</span>` : ''}</div>${holidayName && !isOtherMonth ? `<span class="text-[8px] text-rose-500 font-bold block mt-0.5 truncate">${holidayName}</span>` : ''}</div><div class="space-y-0.5 mt-0.5 overflow-hidden flex-1 flex flex-col justify-end">${renderCellEvents(dayEvents)}</div>`;
+      cell.innerHTML = `<div><div class="flex items-start justify-between"><div class="flex items-start">${numHtml}${weatherHtml}</div>${dayEvents.length > 0 ? `<span class="text-[9px] text-slate-400 font-bold ml-0.5">${dayEvents.length}</span>` : ''}</div>${holidayName && !isOtherMonth ? `<span class="text-[8px] text-rose-500 font-bold block mt-0.5 truncate leading-none">${holidayName}</span>` : ''}</div><div class="space-y-0.5 mt-0.5 overflow-hidden flex-1 flex flex-col justify-end">${renderCellEvents(dayEvents)}</div>`;
       return cell;
     }
 
@@ -719,24 +794,25 @@
       let h = '';
       events.slice(0, 2).forEach(ev => {
         const c = TEAM_INFO[ev.teamId]?.color || 'bg-slate-500';
-        h += `<div class="${c} text-white text-[8px] font-semibold px-1 py-0.2 rounded truncate">${ev.customer}${ev.endDate !== ev.date ? '(連)' : ''}</div>`;
+        h += `<div class="${c} text-white text-[8px] font-semibold px-1 py-0.2 rounded truncate leading-tight">${ev.customer}${ev.endDate !== ev.date ? '(連)' : ''}</div>`;
       });
-      if (events.length > 2) h += `<div class="text-[8px] text-slate-400 font-bold">+${events.length - 2}件</div>`;
+      if (events.length > 2) h += `<div class="text-[8px] text-slate-400 font-bold leading-none">+${events.length - 2}件</div>`;
       return h;
     }
 
     // --- 現場スケジュール詳細 リスト ---
     function renderDayScheduleList() {
       const parts = selectedDateStr.split('-');
-      document.getElementById('selectedDateTitle').textContent = `${parts[0]}年${parseInt(parts[1])}月${parseInt(parts[2])}日のスケジュール`;
+      document.getElementById('selectedDateTitle').textContent = `${parts[0]}年${parseInt(parts[1])}月${parseInt(parts[2])}日の現場スケジュール`;
       const listEl = document.getElementById('dayScheduleList');
       listEl.innerHTML = '';
 
       const dayEvents = schedules.filter(s => isDateInRange(selectedDateStr, s.date, s.endDate) && (currentTeamFilter === 'all' || s.teamId === currentTeamFilter));
-      if (dayEvents.length === 0) { listEl.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs">予定はありません</div>`; return; }
+      if (dayEvents.length === 0) { listEl.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs"><i class="fa-regular fa-calendar text-2xl mb-1 text-slate-300"></i><p>この日の現場予定はありません</p></div>`; return; }
 
       dayEvents.forEach(item => {
         const t = TEAM_INFO[item.teamId] || { name: '班未定', color: 'bg-slate-600', bgLight: 'bg-slate-50' };
+        const timeRangeStr = item.endTime ? `${item.time||'08:30'}〜${item.endTime}` : (item.time||'08:30');
         const card = document.createElement('div');
         card.className = 'p-3 bg-slate-50/90 border border-slate-200/80 rounded-2xl flex items-start justify-between hover:bg-slate-100/80 cursor-pointer space-x-2';
         card.onclick = (e) => { if (!e.target.closest('button')) openScheduleDetailModal(item.id); };
@@ -744,11 +820,11 @@
         card.innerHTML = `
           <div class="space-y-1.5 flex-1">
             <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
-              <span class="text-[11px] font-bold ${t.color} text-white px-2 py-0.5 rounded-md">${item.time||'08:30'}〜${item.endTime||'17:00'}</span>
+              <span class="text-[11px] font-bold ${t.color} text-white px-2 py-0.5 rounded-md flex items-center"><i class="fa-regular fa-clock mr-1 text-[10px]"></i>${timeRangeStr}</span>
               <span class="text-xs font-bold text-slate-900">${item.customer}</span>
               <span class="text-[10px] font-semibold ${t.bgLight} ${t.textCol} px-1.5 py-0.2 rounded border border-current">${t.name}</span>
             </div>
-            <div class="text-xs text-slate-500">${item.location || ''} ${item.estimatePrice ? `¥${Number(item.estimatePrice).toLocaleString()}` : ''}</div>
+            <div class="text-xs text-slate-500">${item.location ? `<span class="flex items-center"><i class="fa-solid fa-location-dot mr-1 text-[10px] text-slate-400"></i>${item.location}</span>` : ''} ${item.estimatePrice ? `<span class="text-[10px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.2 rounded flex items-center mt-1 w-max"><i class="fa-solid fa-yen-sign mr-0.5 text-[9px]"></i>${Number(item.estimatePrice).toLocaleString()}</span>` : ''}</div>
           </div>
           <div class="flex flex-col items-end space-y-1">
             <button onclick="createReportFromSchedule('${item.id}')" class="text-xs text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg font-bold">日報</button>
@@ -762,9 +838,7 @@
       });
     }
 
-    // ---------------------------------------------------------
-    // 4. データ保存・削除アクション (Firestore連動対応)
-    // ---------------------------------------------------------
+    // --- データ保存・削除アクション (Firestore連動対応) ---
     function saveManualSchedule() {
       const customer = document.getElementById('modalSchedCustomer').value.trim();
       const date = document.getElementById('modalSchedDate').value;
@@ -787,7 +861,7 @@
 
       if (db) {
          db.collection("schedules").doc(newItem.id).set(newItem);
-         showToast('現場スケジュールをクラウドに同期しました！');
+         showToast('クラウドデータベースに同期しました！');
       } else {
          if (editingScheduleId) schedules[schedules.findIndex(s=>s.id===editingScheduleId)] = newItem;
          else schedules.push(newItem);
@@ -818,7 +892,7 @@
 
       if (db) {
          db.collection("schedules").doc(newItem.id).set(newItem);
-         showToast('見積価格を含めてクラウドに同期しました！');
+         showToast('見積価格を含めクラウドに同期しました！');
       } else {
          schedules.push(newItem);
          saveDataToStorage();
@@ -939,7 +1013,6 @@
       if (editingReportId === reportId) resetReportForm();
     }
 
-    // --- その他UIヘルパー群 ---
     function openScheduleDetailModal(id) {
       currentDetailScheduleId = id;
       const item = schedules.find(s => s.id === id);
@@ -967,7 +1040,6 @@
       grid.innerHTML = photos.map((b64, i) => `<div class="relative rounded-xl overflow-hidden aspect-square cursor-pointer" onclick="openImageLightbox('${b64}')"><img src="${b64}" class="w-full h-full object-cover"><button onclick="event.stopPropagation(); removeBeforePhoto(${i})" class="absolute top-1 right-1 bg-slate-900/80 text-white rounded-full w-5 h-5 text-[10px]"><i class="fa-solid fa-xmark"></i></button></div>`).join('');
     }
 
-    // -- 以下は以前からの機能そのまま --
     async function runGeminiExtraction(base64Data, mimeType) {
       const prompt = `あなたは建築・造園・電気工事の見積書解析プロです。添付画像から以下の情報を正確に読み取りJSONで出力してください。\n{"customer": "植村 祥子様","time": "08:30","estimatePrice": "44000","location": "香川県坂出市〇〇","detail": "センター斑入りトベラ植栽"}`;
       try {
@@ -1006,19 +1078,20 @@
       } catch(e) { showToast('推敲失敗'); }
     }
 
-    // カレンダーの天気
+    const JAPANESE_HOLIDAYS = { '2026-01-01': '元日', '2026-01-12': '成人の日', '2026-02-11': '建国記念の日', '2026-02-23': '天皇誕生日', '2026-03-20': '春分の日', '2026-04-29': '昭和の日', '2026-05-03': '憲法記念日', '2026-05-04': 'みどりの日', '2026-05-05': 'こどもの日', '2026-05-06': '振替休日', '2026-07-20': '海の日', '2026-08-11': '山の日', '2026-09-21': '敬老の日', '2026-09-22': '国民の休日', '2026-09-23': '秋分の日', '2026-10-12': 'スポーツの日', '2026-11-03': '文化の日', '2026-11-23': '勤労感謝の日' };
+    function getJapaneseHoliday(dateStr) { return JAPANESE_HOLIDAYS[dateStr] || null; }
+
     async function fetchKagawaWeather() {
       try {
         const res = await fetch('https://www.jma.go.jp/bosai/forecast/data/forecast/370000.json');
         const data = await res.json();
         const weekly = data[1].timeSeries[0];
-        weekly.timeDefines.forEach((t, i) => { const d=new Date(t); weeklyWeather[`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`] = { emoji: getWeatherEmoji(weekly.areas[0].weatherCodes[i]) }; });
+        weekly.timeDefines.forEach((t, i) => { const d=new Date(t); weeklyWeather[`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`] = { emoji: getWeatherEmoji(weekly.areas[0].weatherCodes[i]), pop: weekly.areas[0].pops?.[i] || '' }; });
         renderCalendarGrid();
       } catch (e) {}
     }
     const getWeatherEmoji = (c) => c?.startsWith('1') ? '☀️' : c?.startsWith('2') ? '☁️' : c?.startsWith('3') ? '☔' : c?.startsWith('4') ? '⛄' : '☁️';
 
-    // 日報関連関数
     function renderReportList() {
       const list = document.getElementById('reportCardList'); list.innerHTML = '';
       document.getElementById('reportBadgeCount').textContent = dailyReports.length;
@@ -1030,21 +1103,80 @@
         list.appendChild(c);
       });
     }
-    function editReportItem(id) { /* 編集処理 (省略・連携のみ実装済) */ }
+
+    function editReportItem(id) {
+       const r = dailyReports.find(x => x.id === id); if(!r) return;
+       editingReportId = id;
+       document.getElementById('formWorkDate').value = r.workDate;
+       document.getElementById('formSiteName').value = r.siteName;
+       switchView('report');
+    }
     function resetReportForm() { editingReportId = null; document.getElementById('formSiteName').value = ''; document.getElementById('formMemo').value = ''; }
     function createReportFromSchedule(id) { const s = schedules.find(x=>x.id===id); if(!s)return; document.getElementById('formSiteName').value = s.customer; document.getElementById('formWorkDate').value = s.date; switchView('report'); closeScheduleDetailModal(); }
-    function openEditScheduleModal(id) { /* ... */ }
-    function autofillFromSelectedDaySchedule() { /* ... */ }
-    function autofillEstimatePriceFromSchedule() { /* ... */ }
-    function openGoogleMapNav() { /* ... */ }
-    function copyReportAsFormText() { /* ... */ }
-    function exportDataToFile() { /* ... */ }
-    function triggerImportData() { /* ... */ }
-    function handleDataImport() { /* ... */ }
+    function openEditScheduleModal(id) {
+        editingScheduleId = id;
+        const item = schedules.find(s => s.id === id);
+        if(!item) return;
+        document.getElementById('modalSchedCustomer').value = item.customer;
+        document.getElementById('modalSchedDate').value = item.date;
+        document.getElementById('modalSchedEndDate').value = item.endDate || item.date;
+        document.getElementById('modalSchedTime').value = item.time || '08:30';
+        document.getElementById('modalSchedEndTime').value = item.endTime || '17:00';
+        document.getElementById('modalSchedPrice').value = item.estimatePrice || '';
+        document.getElementById('addScheduleModal').classList.remove('hidden');
+        document.getElementById('addScheduleModal').classList.add('flex');
+    }
+    function autofillFromSelectedDaySchedule() {
+        const dayEvents = schedules.filter(s => isDateInRange(selectedDateStr, s.date, s.endDate));
+        if(dayEvents.length > 0) createReportFromSchedule(dayEvents[0].id);
+    }
+    function autofillEstimatePriceFromSchedule() {
+        const d = document.getElementById('formWorkDate').value;
+        const s = document.getElementById('formSiteName').value;
+        const match = schedules.find(x => isDateInRange(d, x.date, x.endDate) || (s && x.customer.includes(s)));
+        if(match && match.estimatePrice) document.getElementById('formEstimatePrice').value = match.estimatePrice;
+    }
+    function openGoogleMapNav() {
+        const item = schedules.find(s => s.id === currentDetailScheduleId);
+        if(item && item.location) window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.location)}`, '_blank');
+    }
+    function exportDataToFile() {
+        const str = JSON.stringify({ schedules, dailyReports });
+        const blob = new Blob([str], { type: 'application/json' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'backup.json'; a.click();
+    }
+    function triggerImportData() { document.getElementById('importFileInput').click(); }
+    function handleDataImport(e) {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            const data = JSON.parse(evt.target.result);
+            if(data.schedules) schedules = data.schedules;
+            if(data.dailyReports) dailyReports = data.dailyReports;
+            saveDataToStorage(); renderAll(); showToast('復元完了');
+        };
+        reader.readAsText(e.target.files[0]);
+    }
+    let currentUploadedBase64 = null;
+    let currentUploadedFullBase64 = null;
+    function openAiScanModal() { document.getElementById('aiScanModal').classList.remove('hidden'); document.getElementById('aiScanModal').classList.add('flex'); }
+    function closeAiScanModal() { document.getElementById('aiScanModal').classList.add('hidden'); document.getElementById('aiScanModal').classList.remove('flex'); }
+    function triggerFileInput() { document.getElementById('estimateFileInput').click(); }
+    async function handleFileSelect(event) {
+        const file = event.target.files[0]; if(!file) return;
+        document.getElementById('dropArea').classList.add('hidden'); document.getElementById('previewContainer').classList.remove('hidden');
+        document.getElementById('aiLoadingOverlay').classList.remove('hidden');
+        const compressed = await compressImageFile(file, 1000, 0.75);
+        currentUploadedFullBase64 = compressed;
+        document.getElementById('previewImage').src = compressed;
+        runGeminiExtraction(compressed.split(',')[1], 'image/jpeg');
+    }
     function toggleOptionsMenu() { document.getElementById('optionsMenuModal').classList.toggle('hidden'); document.getElementById('optionsMenuModal').classList.toggle('flex'); }
-    function toggleGasGuideModal() { /* ... */ }
-    function togglePwaInstallGuide() { document.getElementById('pwaInstallGuideModal').classList.toggle('hidden'); document.getElementById('pwaInstallGuideModal').classList.toggle('flex'); }
+    function saveGasWebhookUrl(val) { gasWebhookUrl = val; localStorage.setItem('GAS_WEBHOOK_URL', val); updateGasSyncBadge(); }
+    function updateGasSyncBadge() { document.getElementById('gasSyncBadge').classList.toggle('hidden', !gasWebhookUrl); }
     function switchView(mode) { document.getElementById('view-calendar-container').classList.toggle('hidden', mode!=='calendar'); document.getElementById('view-report-container').classList.toggle('hidden', mode!=='report'); }
+    function togglePwaInstallGuide() { document.getElementById('pwaInstallGuideModal').classList.toggle('hidden'); document.getElementById('pwaInstallGuideModal').classList.toggle('flex'); }
+    function toggleGasGuideModal() { document.getElementById('gasGuideModal').classList.toggle('hidden'); document.getElementById('gasGuideModal').classList.toggle('flex'); }
+    function copyReportAsFormText(id) { /* implement logic */ }
   </script>
 </body>
 </html>
