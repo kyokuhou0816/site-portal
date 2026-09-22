@@ -313,6 +313,7 @@
           <div>
             <label class="block text-[11px] font-bold text-slate-700 mb-1">最終確認について</label>
             <select id="formFinalCheck" class="w-full text-xs font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50">
+              <option value="" selected>（空欄 / 継続中）</option>
               <option value="【確認済】すぐに請求書発送してください">【確認済】すぐに請求書発送してください</option>
               <option value="【未確認】最終確認後、請求書発送してください">【未確認】最終確認後、請求書発送してください</option>
               <option value="【確認済】現場で集金済">【確認済】現場で集金済</option>
@@ -1371,7 +1372,7 @@ function doPost(e) {<br>
        if (statusRad) statusRad.checked = true;
 
        document.getElementById('formProgressRate').value = r.progressRate || '50% (半日・中間)';
-       document.getElementById('formFinalCheck').value = r.finalCheck || '【確認済】すぐに請求書発送してください';
+       document.getElementById('formFinalCheck').value = r.finalCheck || '';
        document.getElementById('formMemo').value = r.memo || '';
        document.getElementById('formPestBlock').checked = !!r.pestBlock;
 
@@ -1392,6 +1393,8 @@ function doPost(e) {<br>
       document.getElementById('formWasteAmount').value = ''; 
       document.getElementById('formOutsourceFee').value = ''; 
       document.getElementById('formOutsourceFeeSub').value = ''; 
+      document.getElementById('formProgressRate').value = '50% (半日・中間)';
+      document.getElementById('formFinalCheck').value = '';
       document.getElementById('formMemo').value = ''; 
       document.getElementById('formPestBlock').checked = false; 
       document.getElementById('submitReportBtnText').textContent = '日報を登録・保存する';
