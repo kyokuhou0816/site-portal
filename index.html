@@ -588,20 +588,31 @@
         <button onclick="toggleGasGuideModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
       <div class="text-xs text-slate-600 space-y-3 leading-relaxed">
-        <p>Googleスプレッドシートの「拡張機能」→「Apps Script」に以下のスクリプトを貼り付けてウェブアプリとして公開します。</p>
-        <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl font-mono text-[10px] overflow-x-auto">
-          function doPost(e) {<br>
-          &nbsp;&nbsp;var d = JSON.parse(e.postData.contents);<br>
-          &nbsp;&nbsp;var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();<br>
-          &nbsp;&nbsp;sheet.appendRow([<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;new Date(), d.workDate, d.teamName, d.siteName, d.estimatePrice,<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;d.manpower.yoshii, d.manpower.hisamoto, d.manpower.kumano, d.manpower.takagawa,<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;d.wasteAmount, d.outsourceFee, d.workStatus, d.progressRate, d.memo<br>
-          &nbsp;&nbsp;]);<br>
-          &nbsp;&nbsp;return ContentService.createTextOutput("OK");<br>
-          }
+        <div class="p-2.5 bg-emerald-50 rounded-xl border border-emerald-200">
+          <p class="font-bold text-emerald-900 text-[11px] mb-1">対象スプレッドシート:</p>
+          <a href="https://docs.google.com/spreadsheets/d/1HiWVa3me132ssjHA2c92AcDyIJWFY16ZHXvagBmyIBM/edit" target="_blank" class="text-indigo-600 underline font-bold break-all text-[10px]">
+            対象シートを開く <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-0.5"></i>
+          </a>
         </div>
-        <p class="text-[11px]">公開時のアクセス権限を「<strong>全員 (Anyone)</strong>」にして発行されたウェブアプリURLを設定メニューに貼り付けてください。</p>
+        <p>1. 上記シートを開き、上のメニューの「<strong>拡張機能</strong>」→「<strong>Apps Script</strong>」を開きます。</p>
+        <p>2. もともと書かれているコードをすべて消して、下記コードをそのまま貼り付けます。</p>
+        <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl font-mono text-[9px] overflow-x-auto leading-normal">
+function doPost(e) {<br>
+&nbsp;&nbsp;var d = JSON.parse(e.postData.contents);<br>
+&nbsp;&nbsp;var ss = SpreadsheetApp.openById("1HiWVa3me132ssjHA2c92AcDyIJWFY16ZHXvagBmyIBM");<br>
+&nbsp;&nbsp;var sheet = ss.getSheets()[0];<br>
+&nbsp;&nbsp;sheet.appendRow([<br>
+&nbsp;&nbsp;&nbsp;&nbsp;new Date(), d.workDate, d.teamName, d.siteName, d.estimatePrice,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;d.manpower.yoshii, d.manpower.hisamoto, d.manpower.kumano, d.manpower.takagawa,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;d.wasteAmount, d.outsourceFee,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(d.equipment1||[]).join(", "), (d.equipment2||[]).join(", "),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;d.workStatus, d.progressRate, d.finalCheck, d.memo, (d.pestBlock ? "受注あり" : "なし")<br>
+&nbsp;&nbsp;]);<br>
+&nbsp;&nbsp;return ContentService.createTextOutput("OK");<br>
+}
+        </div>
+        <p>3. 右上の「<strong>デプロイ</strong>」→「<strong>新しいデプロイ</strong>」を押し、アクセスの種類を「<strong>全員（Anyone）</strong>」にしてデプロイします。</p>
+        <p>4. 発行された「ウェブアプリURL」をコピーし、本アプリの右上の設定（歯車 ⚙️）の「<strong>スプシ連携 GAS URL</strong>」に貼り付ければ連携完了です！</p>
       </div>
       <button onclick="toggleGasGuideModal()" class="w-full py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold">確認完了</button>
     </div>
@@ -631,8 +642,10 @@
     const DEFAULT_API_KEY = "AQ.Ab8RN6KD9yzqnNql3PaPvCxZ4AAQKL1yDfZ_hIW26dprNKR24g";
     let activeApiKey = localStorage.getItem('CUSTOM_GEMINI_KEY') || DEFAULT_API_KEY;
 
-    const DEFAULT_GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzLG2r2TkJv1Yv2gp54q2Vp2n9OW78TdtISGq2kEsGcjV7m0w7SAIX5a9mHg1pWRiZJ2g/exec";
-    let gasWebhookUrl = localStorage.getItem('GAS_WEBHOOK_URL') || DEFAULT_GAS_WEBHOOK_URL;
+    const DEFAULT_GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyyX3TFrus2g6U3ul4WNTbMjMxFae_dylx6klUzfjX_4TZgqo1dviCcjbBMjg0mXiys/exec";
+    // 新しいURLをデフォルトとして確実に適用
+    let gasWebhookUrl = DEFAULT_GAS_WEBHOOK_URL;
+    localStorage.setItem('GAS_WEBHOOK_URL', DEFAULT_GAS_WEBHOOK_URL);
     
     let editingReportId = null;
     let editingScheduleId = null; 
