@@ -158,6 +158,7 @@
           <div class="flex items-center space-x-2">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
             <h3 id="selectedDateTitle" class="text-sm font-bold text-slate-900">現場スケジュール</h3>
+            <span id="selectedDateWeatherBadge" class="hidden text-xs font-bold bg-slate-100 px-2 py-0.5 rounded-lg text-slate-700 items-center space-x-1"></span>
           </div>
           <div class="flex items-center space-x-2">
             <button onclick="openAddScheduleModal()" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold flex items-center">
@@ -675,7 +676,8 @@
       }, 2500);
     }
 
-    function compressImageFile(file, maxWidth = 1000, quality = 0.75) {
+    // 見積書の小さな文字・番地・宛名を潰さないよう解像度を1800px・高画質に最適化
+    function compressImageFile(file, maxWidth = 1800, quality = 0.85) {
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -691,6 +693,9 @@
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext('2d');
+            // 文字の可読性を保つ描画設定
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(img, 0, 0, width, height);
             resolve(canvas.toDataURL('image/jpeg', quality));
           };
@@ -896,6 +901,21 @@
     function renderDayScheduleList() {
       const parts = selectedDateStr.split('-');
       document.getElementById('selectedDateTitle').textContent = `${parts[0]}年${parseInt(parts[1])}月${parseInt(parts[2])}日の現場スケジュール`;
+      
+      // 選択した日の天気バッジを表示
+      const weatherBadge = document.getElementById('selectedDateWeatherBadge');
+      if (weatherBadge) {
+        const w = weeklyWeather[selectedDateStr];
+        if (w && w.emoji) {
+          weatherBadge.innerHTML = `<span>${w.emoji}</span><span class="${parseInt(w.pop, 10)>=40 ? 'text-blue-600 font-extrabold' : 'text-slate-600'}">${w.pop ? w.pop + '%' : ''}</span>`;
+          weatherBadge.classList.remove('hidden');
+          weatherBadge.classList.add('inline-flex');
+        } else {
+          weatherBadge.classList.add('hidden');
+          weatherBadge.classList.remove('inline-flex');
+        }
+      }
+
       const listEl = document.getElementById('dayScheduleList');
       listEl.innerHTML = '';
 
@@ -1153,33 +1173,91 @@
     }
 
     async function runGeminiExtraction(base64Data, mimeType) {
-      const prompt = `あなたは建築・造園・電気工事の見積書解析プロです。添付画像から以下の情報を正確に読み取りJSONで出力してください。見つからない項目は空文字にしてください。\n{"customer": "顧客名","time": "08:30","estimatePrice": "金額(数値のみ)","location": "住所","detail": "作業詳細"}`;
+      // 日本の造園・土木・建築の見積書フォーマットに特化した厳密プロンプト
+      const systemPrompt = `あなたは日本の造園・外構・土木・建築工事の見積書解析の専門家です。
+アップロードされた画像（見積書・請求書・発注書・工程表）から、現場管理に必要な以下の情報を正確に読み取ってJSONで出力してください。
+
+【抽出ルール（重要）】
+1. customer（顧客名/現場名）:
+   - 「様」「御中」「殿」がついている相手方の名前（個人名や法人名、元請会社名）。
+   - 「件名」「工事名」に施主名や現場名が入っている場合（例: 「高橋様邸庭木剪定工事」なら「高橋 健一」または「高橋様邸」）を優先。
+   - ※注意: 見積書を発行している自社名（旭邦園、株式会社、代表者名など）は絶対に顧客名にしないでください。
+2. location（現場住所 / 工事場所）:
+   - 「工事場所」「施工場所」「現場」「納入場所」と記載されている住所を最優先で取得。
+   - 工事場所の欄がない場合は、顧客名の周辺に記載されている顧客住所（郵便番号・都道府県・市区町村・番地）を取得。
+   - ※注意: 発行元（自社）の会社所在地は絶対に除外してください。
+3. estimatePrice（見積金額）:
+   - 「御見積金額」「合計金額」「税込金額」などの総額数値を抽出（カンマや円記号を除いた半角数字のみ）。
+4. startDate（開始日）/ endDate（終了日）:
+   - 「工期」「作業予定日」「見積日」などから YYYY-MM-DD 形式で抽出（不明な場合は空文字）。
+5. detail（作業内容）:
+   - 「件名」「工事名称」または明細の主な作業（例: 「庭木剪定・伐採・除草作業一式」など）を簡潔に。
+
+見つからない項目は空文字 "" にしてください。`;
+
+      const userQuery = `この見積書画像から「顧客名（宛先）」「現場住所（工事場所）」「見積価格（税込合計）」「工期/日付」「工事内容」を抽出し、以下のJSONフォーマットのみで回答してください。
+{
+  "customer": "顧客名または案件名",
+  "location": "工事場所または顧客住所",
+  "estimatePrice": "150000",
+  "startDate": "2026-09-25",
+  "endDate": "2026-09-25",
+  "detail": "作業概要"
+}`;
+
       try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${activeApiKey}`, {
-          method: "POST", 
+        const payload = {
+          contents: [{
+            role: "user",
+            parts: [
+              { text: systemPrompt + "\n\n" + userQuery },
+              {
+                inlineData: {
+                  mimeType: mimeType || "image/jpeg",
+                  data: base64Data
+                }
+              }
+            ]
+          }],
+          generationConfig: {
+            responseMimeType: "application/json"
+          }
+        };
+
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${activeApiKey}`, {
+          method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            contents: [{ 
-              role: "user", 
-              parts: [{ text: prompt }, { inlineData: { mimeType: mimeType || "image/jpeg", data: base64Data } }] 
-            }], 
-            generationConfig: { responseMimeType: "application/json" } 
-          })
+          body: JSON.stringify(payload)
         });
+
+        if (!res.ok) {
+          throw new Error(`API returned status ${res.status}`);
+        }
+
         const data = await res.json();
-        const p = JSON.parse(data.candidates[0].content.parts[0].text);
-        document.getElementById('aiCustomer').value = p.customer || ''; 
-        document.getElementById('aiPrice').value = p.estimatePrice || ''; 
-        document.getElementById('aiLocation').value = p.location || ''; 
-        document.getElementById('aiDetail').value = p.detail || '';
-        document.getElementById('aiLoadingOverlay').classList.add('hidden'); 
+        const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!jsonText) throw new Error("No response text from AI");
+
+        const p = JSON.parse(jsonText);
+
+        // 抽出結果の自動反映
+        if (p.customer) document.getElementById('aiCustomer').value = p.customer.trim();
+        if (p.location) document.getElementById('aiLocation').value = p.location.trim();
+        if (p.estimatePrice) document.getElementById('aiPrice').value = String(p.estimatePrice).replace(/[^0-9]/g, '');
+        if (p.detail) document.getElementById('aiDetail').value = p.detail.trim();
+        if (p.startDate) {
+          document.getElementById('aiDate').value = p.startDate;
+          document.getElementById('aiEndDate').value = p.endDate || p.startDate;
+        }
+
+        document.getElementById('aiLoadingOverlay').classList.add('hidden');
         document.getElementById('extractionResults').classList.remove('hidden');
-        showToast('✨ AI抽出完了！');
-      } catch (err) { 
-        console.error(err);
-        showToast('AI読取に失敗しました。手動で入力してください。'); 
-        document.getElementById('aiLoadingOverlay').classList.add('hidden'); 
-        document.getElementById('extractionResults').classList.remove('hidden'); 
+        showToast('✨ AIが見積書の顧客名・住所・金額を抽出しました！');
+      } catch (err) {
+        console.error("見積書AI読取エラー:", err);
+        showToast('AI読取に一部失敗しました。内容を手動で入力・確認してください。');
+        document.getElementById('aiLoadingOverlay').classList.add('hidden');
+        document.getElementById('extractionResults').classList.remove('hidden');
       }
     }
 
@@ -1244,18 +1322,79 @@
       try {
         const res = await fetch('https://www.jma.go.jp/bosai/forecast/data/forecast/370000.json');
         const data = await res.json();
-        const weekly = data[1].timeSeries[0];
-        weekly.timeDefines.forEach((t, i) => { 
-          const d = new Date(t); 
-          weeklyWeather[`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`] = { 
-            emoji: getWeatherEmoji(weekly.areas[0].weatherCodes[i]), 
-            pop: weekly.areas[0].pops?.[i] || '' 
-          }; 
-        });
+        weeklyWeather = {};
+
+        // 1. 今日の短期予報 (data[0])：当日・明日・明後日の詳細情報
+        if (data && data[0] && data[0].timeSeries) {
+          const shortWeatherSeries = data[0].timeSeries[0]; // 天気マーク
+          const shortPopSeries = data[0].timeSeries[1];     // 降水確率
+          
+          if (shortWeatherSeries && shortWeatherSeries.timeDefines) {
+            shortWeatherSeries.timeDefines.forEach((timeStr, i) => {
+              const d = new Date(timeStr);
+              const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+              const weatherCode = shortWeatherSeries.areas[0]?.weatherCodes?.[i];
+              
+              // 当日の直近降水確率を探す
+              let currentPop = '';
+              if (shortPopSeries && shortPopSeries.timeDefines) {
+                const popIndex = shortPopSeries.timeDefines.findIndex(pt => {
+                  const pd = new Date(pt);
+                  return pd.getFullYear() === d.getFullYear() && pd.getMonth() === d.getMonth() && pd.getDate() === d.getDate();
+                });
+                if (popIndex !== -1 && shortPopSeries.areas[0]?.pops?.[popIndex] !== undefined) {
+                  currentPop = shortPopSeries.areas[0].pops[popIndex];
+                }
+              }
+
+              if (weatherCode) {
+                weeklyWeather[dateKey] = {
+                  emoji: getWeatherEmoji(weatherCode),
+                  pop: currentPop
+                };
+              }
+            });
+          }
+        }
+
+        // 2. 週間予報 (data[1])：当日以降〜向こう7日間の予報を補完・結合
+        if (data && data[1] && data[1].timeSeries) {
+          const weekly = data[1].timeSeries[0];
+          if (weekly && weekly.timeDefines) {
+            weekly.timeDefines.forEach((timeStr, i) => {
+              const d = new Date(timeStr);
+              const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+              const weatherCode = weekly.areas[0]?.weatherCodes?.[i];
+              const popVal = weekly.areas[0]?.pops?.[i] || '';
+
+              // 当日データが短期予報にあれば降水確率の補完のみ、無ければ新規登録
+              if (!weeklyWeather[dateKey]) {
+                weeklyWeather[dateKey] = {
+                  emoji: getWeatherEmoji(weatherCode),
+                  pop: popVal
+                };
+              } else if (!weeklyWeather[dateKey].pop && popVal) {
+                weeklyWeather[dateKey].pop = popVal;
+              }
+            });
+          }
+        }
+
         renderCalendarGrid();
-      } catch (e) {}
+        renderDayScheduleList();
+      } catch (e) {
+        console.warn('天気情報の取得に失敗しました:', e);
+      }
     }
-    const getWeatherEmoji = (c) => c?.startsWith('1') ? '☀️' : c?.startsWith('2') ? '☁️' : c?.startsWith('3') ? '☔' : c?.startsWith('4') ? '⛄' : '☁️';
+
+    const getWeatherEmoji = (c) => {
+      if (!c) return '☀️';
+      if (c.startsWith('1')) return '☀️'; // 晴れ系
+      if (c.startsWith('2')) return '☁️'; // 曇り系
+      if (c.startsWith('3')) return '☔'; // 雨系
+      if (c.startsWith('4')) return '⛄'; // 雪系
+      return '☁️';
+    };
 
     function renderReportList() {
       const list = document.getElementById('reportCardList'); 
