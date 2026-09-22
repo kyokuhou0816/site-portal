@@ -234,11 +234,11 @@
               </div>
             </div>
             <div class="bg-white p-2 rounded-xl border border-slate-200 shadow-2xs">
-              <span class="text-[11px] font-bold text-slate-800 block mb-1">藤井</span>
+              <span class="text-[11px] font-bold text-slate-800 block mb-1">久本</span>
               <div class="flex space-x-1.5 text-xs">
-                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-indigo-100 has-[:checked]:bg-indigo-600 has-[:checked]:text-white"><input type="radio" name="manpower_fujii" value="1.0" class="sr-only"><span>1.0</span></label>
-                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-indigo-100 has-[:checked]:bg-indigo-600 has-[:checked]:text-white"><input type="radio" name="manpower_fujii" value="0.5" class="sr-only"><span>0.5</span></label>
-                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-slate-200 has-[:checked]:bg-slate-700 has-[:checked]:text-white"><input type="radio" name="manpower_fujii" value="0" checked class="sr-only"><span>なし</span></label>
+                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-purple-100 has-[:checked]:bg-purple-600 has-[:checked]:text-white"><input type="radio" name="manpower_hisamoto" value="1.0" class="sr-only"><span>1.0</span></label>
+                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-purple-100 has-[:checked]:bg-purple-600 has-[:checked]:text-white"><input type="radio" name="manpower_hisamoto" value="0.5" class="sr-only"><span>0.5</span></label>
+                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-slate-200 has-[:checked]:bg-slate-700 has-[:checked]:text-white"><input type="radio" name="manpower_hisamoto" value="0" checked class="sr-only"><span>なし</span></label>
               </div>
             </div>
             <div class="bg-white p-2 rounded-xl border border-slate-200 shadow-2xs">
@@ -250,14 +250,6 @@
               </div>
             </div>
             <div class="bg-white p-2 rounded-xl border border-slate-200 shadow-2xs">
-              <span class="text-[11px] font-bold text-slate-800 block mb-1">久本</span>
-              <div class="flex space-x-1.5 text-xs">
-                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-purple-100 has-[:checked]:bg-purple-600 has-[:checked]:text-white"><input type="radio" name="manpower_hisamoto" value="1.0" class="sr-only"><span>1.0</span></label>
-                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-purple-100 has-[:checked]:bg-purple-600 has-[:checked]:text-white"><input type="radio" name="manpower_hisamoto" value="0.5" class="sr-only"><span>0.5</span></label>
-                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-slate-200 has-[:checked]:bg-slate-700 has-[:checked]:text-white"><input type="radio" name="manpower_hisamoto" value="0" checked class="sr-only"><span>なし</span></label>
-              </div>
-            </div>
-            <div class="bg-white p-2 rounded-xl border border-slate-200 shadow-2xs col-span-2">
               <span class="text-[11px] font-bold text-slate-800 block mb-1">高川</span>
               <div class="flex space-x-1.5 text-xs">
                 <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-teal-100 has-[:checked]:bg-teal-600 has-[:checked]:text-white"><input type="radio" name="manpower_takagawa" value="1.0" class="sr-only"><span>1.0</span></label>
@@ -330,7 +322,7 @@
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
             <span>メモ・特記事項</span>
-            <button onclick="generateAiRefinedReportMemo()" class="text-[10px] font-bold text-purple-600 hover:text-purple-800 flex items-center"><i class="fa-solid fa-wand-magic-sparkles mr-1 text-amber-500"></i> AIでメモ文章を推敲</button>
+            <button type="button" onclick="generateAiRefinedReportMemo()" class="text-[10px] font-bold text-purple-600 hover:text-purple-800 flex items-center"><i class="fa-solid fa-wand-magic-sparkles mr-1 text-amber-500"></i> AIでメモ文章を推敲</button>
           </label>
           <textarea id="formMemo" rows="2" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-1 focus:ring-indigo-500 resize-none" placeholder="現場での気付きや注意事項、明日への引き継ぎなど"></textarea>
         </div>
@@ -344,11 +336,37 @@
         </div>
       </div>
 
+      <!-- 提出済み日報履歴 (月別振り分けセレクター付き) -->
       <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-200">
-        <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
-          <h3 class="text-sm font-bold text-slate-900 flex items-center"><i class="fa-solid fa-clock-rotate-left text-slate-400 mr-1.5"></i> 提出済み日報履歴</h3>
-          <span id="reportTotalCount" class="text-xs text-slate-400 font-normal">0件</span>
+        <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100 flex-wrap gap-2">
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 flex items-center"><i class="fa-solid fa-clock-rotate-left text-slate-400 mr-1.5"></i> 提出済み日報履歴</h3>
+            <span id="reportTotalCount" class="text-xs text-slate-400 font-normal">0件</span>
+          </div>
+          <div class="flex items-center space-x-1.5">
+            <label for="reportMonthFilter" class="text-[10px] font-bold text-slate-500">表示月:</label>
+            <select id="reportMonthFilter" onchange="onReportMonthFilterChange(this.value)" class="text-xs font-bold bg-slate-100 border border-slate-200 rounded-lg px-2 py-1 text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+              <option value="all">全期間表示</option>
+            </select>
+          </div>
         </div>
+
+        <!-- 選択月のサマリー表示 -->
+        <div id="reportMonthSummaryBar" class="grid grid-cols-3 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-center mb-3">
+          <div>
+            <span class="text-[9px] font-bold text-slate-400 block">対象件数</span>
+            <span id="summaryFilteredCount" class="text-xs font-black text-slate-800">0 件</span>
+          </div>
+          <div>
+            <span class="text-[9px] font-bold text-slate-400 block">総人工合計</span>
+            <span id="summaryFilteredManpower" class="text-xs font-black text-indigo-600">0 人工</span>
+          </div>
+          <div>
+            <span class="text-[9px] font-bold text-slate-400 block">残材量合計</span>
+            <span id="summaryFilteredWaste" class="text-xs font-black text-emerald-600">0 kg</span>
+          </div>
+        </div>
+
         <div id="reportCardList" class="space-y-3"></div>
       </div>
     </div>
@@ -378,7 +396,10 @@
             <span class="text-slate-500 font-bold"><i class="fa-solid fa-location-dot mr-1"></i>現場住所</span>
             <button id="openMapBtn" onclick="openGoogleMapNav()" class="text-[10px] font-bold text-emerald-700 bg-emerald-100 hover:bg-emerald-200 px-2 py-0.5 rounded-md flex items-center"><i class="fa-solid fa-map-location-dot mr-1"></i>マップで開く</button>
           </div>
-          <p id="detailLocationText" class="font-semibold text-slate-800 bg-white p-2 rounded-xl border border-slate-100"></p>
+          <div class="bg-white p-2.5 rounded-xl border border-slate-100 space-y-1">
+            <span id="detailPostalCodeText" class="text-[11px] font-bold text-slate-500 block font-mono"></span>
+            <p id="detailLocationText" class="font-semibold text-slate-800"></p>
+          </div>
         </div>
       </div>
       <div class="space-y-1.5">
@@ -414,7 +435,7 @@
         </div>
         <button onclick="closeAiScanModal()" class="p-1 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
-      <p class="text-xs text-slate-500 mb-4">写真から顧客名・作業日時・現場住所・見積金額をAIが自動抽出します。</p>
+      <p class="text-xs text-slate-500 mb-4">写真から顧客名・郵便番号・現場住所・見積金額をAIが自動抽出します。</p>
       <div id="dropArea" class="border-2 border-dashed border-emerald-300 bg-emerald-50/50 rounded-2xl p-6 text-center cursor-pointer hover:bg-emerald-50 transition-colors" onclick="triggerFileInput()">
         <input type="file" id="estimateFileInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
         <i class="fa-solid fa-cloud-arrow-up text-3xl text-emerald-500 mb-2"></i>
@@ -537,18 +558,22 @@
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
         <h4 class="font-bold text-sm text-slate-900 flex items-center"><i class="fa-solid fa-mobile-screen-button text-emerald-600 mr-2"></i>ホーム画面への追加</h4>
         <button onclick="togglePwaInstallGuide()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-      <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 text-xs">
-        <div class="flex items-center justify-between"><span class="text-slate-500 font-bold"><i class="fa-regular fa-calendar mr-1"></i>日程</span><span id="detailDateDisplay" class="font-extrabold text-slate-800"></span></div>
-        <div class="flex items-center justify-between"><span class="text-slate-500 font-bold"><i class="fa-solid fa-yen-sign mr-1"></i>見積価格</span><span id="detailPriceDisplay" class="font-extrabold text-indigo-600 text-sm"></span></div>
-        <div>
-          <div class="flex items-center justify-between mb-1">
-            <span class="text-slate-500 font-bold"><i class="fa-solid fa-location-dot mr-1"></i>現場住所</span>
-            <button id="openMapBtn" onclick="openGoogleMapNav()" class="text-[10px] font-bold text-emerald-700 bg-emerald-100 hover:bg-emerald-200 px-2 py-0.5 rounded-md flex items-center"><i class="fa-solid fa-map-location-dot mr-1"></i>マップで開く</button>
-          </div>
-          <div class="bg-white p-2 rounded-xl border border-slate-100 space-y-0.5">
-            <span id="detailPostalCodeText" class="text-[11px] font-bold text-slate-500 block font-mono"></span>
-            <p id="detailLocationText" class="font-semibold text-slate-800"></p>
-          </div>
+      </div>
+      <div class="text-xs text-slate-600 space-y-3 leading-relaxed">
+        <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+          <p class="font-bold text-slate-800 mb-1"><i class="fa-brands fa-apple mr-1 text-slate-900"></i>iPhone (Safari) の場合:</p>
+          <ol class="list-decimal list-inside space-y-1 text-[11px]">
+            <li>画面下の共有アイコン（四角から上矢印）をタップ</li>
+            <li>「ホーム画面に追加」を選択</li>
+            <li>右上の「追加」を押すとアイコンが作成されます</li>
+          </ol>
+        </div>
+        <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+          <p class="font-bold text-slate-800 mb-1"><i class="fa-brands fa-android mr-1 text-emerald-600"></i>Android (Chrome) の場合:</p>
+          <ol class="list-decimal list-inside space-y-1 text-[11px]">
+            <li>右上のメニュー（3つの点）をタップ</li>
+            <li>「ホーム画面に追加」または「アプリをインストール」を選択</li>
+          </ol>
         </div>
       </div>
       <button onclick="togglePwaInstallGuide()" class="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold">閉じる</button>
@@ -631,7 +656,6 @@
       console.warn("Firebase初期化エラー (ローカル動作になります):", e);
     }
 
-    // --- 状態変数 ---
     const todayObj = new Date();
     const getTodayString = () => `${todayObj.getFullYear()}-${String(todayObj.getMonth() + 1).padStart(2, '0')}-${String(todayObj.getDate()).padStart(2, '0')}`;
     const realTodayStr = getTodayString();
@@ -639,6 +663,7 @@
     let currentYear = todayObj.getFullYear();
     let currentMonth = todayObj.getMonth();
     let selectedDateStr = realTodayStr;
+    let selectedReportMonth = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`; // 月別フィルター初期値
     let currentTeamFilter = 'all';
     let currentViewMode = 'calendar';
     let currentDetailScheduleId = null;
@@ -656,7 +681,6 @@
       hisamoto: { id: 'fujii', name: '藤井【久本】', color: 'bg-indigo-600', textCol: 'text-indigo-700', bgLight: 'bg-indigo-50' }
     };
 
-    // --- ユーティリティ関数 ---
     function initPwa() {
       const manifest = {
         name: "現場スケジュール & 日報管理ポータル",
@@ -711,7 +735,6 @@
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext('2d');
-            // 文字の可読性を保つ描画設定
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(img, 0, 0, width, height);
@@ -723,7 +746,6 @@
       });
     }
 
-    // --- クラウド同期 (Firestore) & ローカル保存ロジック ---
     function loadDataFromStorage() {
       try {
         const storedSchedules = localStorage.getItem('SCHEDULES_DATA');
@@ -761,6 +783,7 @@
           } else if (!snapshot.empty) {
              dailyReports = snapshot.docs.map(doc => doc.data());
              localStorage.setItem('REPORTS_DATA', JSON.stringify(dailyReports));
+             updateReportMonthFilterOptions();
              renderReportList();
           }
         }, err => console.warn("日報同期エラー:", err));
@@ -821,6 +844,7 @@
       document.getElementById('currentYearMonthDisplay').textContent = `${currentYear}年 ${currentMonth + 1}月`;
       renderCalendarGrid();
       renderDayScheduleList();
+      updateReportMonthFilterOptions();
       renderReportList();
       updateFilterTabs();
     }
@@ -861,7 +885,6 @@
       return targetDateStr >= startDateStr && targetDateStr <= end;
     }
 
-    // --- カレンダー描画 ---
     function renderCalendarGrid() {
       const grid = document.getElementById('calendarGrid');
       grid.innerHTML = '';
@@ -915,12 +938,10 @@
       return h;
     }
 
-    // --- 現場スケジュール詳細 リスト ---
     function renderDayScheduleList() {
       const parts = selectedDateStr.split('-');
       document.getElementById('selectedDateTitle').textContent = `${parts[0]}年${parseInt(parts[1])}月${parseInt(parts[2])}日の現場スケジュール`;
       
-      // 選択した日の天気バッジを表示
       const weatherBadge = document.getElementById('selectedDateWeatherBadge');
       if (weatherBadge) {
         const w = weeklyWeather[selectedDateStr];
@@ -971,7 +992,6 @@
       });
     }
 
-    // --- データ保存・削除アクション ---
     function saveManualSchedule() {
       const customer = document.getElementById('modalSchedCustomer').value.trim();
       const date = document.getElementById('modalSchedDate').value;
@@ -1099,6 +1119,12 @@
       else { saveDataToStorage(); renderBeforePhotoGrid(item.beforePhotos); }
     }
 
+    function renderBeforePhotoGrid(photos) {
+      const grid = document.getElementById('beforePhotoGrid');
+      if (!photos || !photos.length) { grid.innerHTML = `<div class="col-span-3 text-center py-4 text-[11px] text-slate-400">施工前写真はありません</div>`; return; }
+      grid.innerHTML = photos.map((b64, i) => `<div class="relative rounded-xl overflow-hidden aspect-square cursor-pointer" onclick="openImageLightbox('${b64}')"><img src="${b64}" class="w-full h-full object-cover"><button onclick="event.stopPropagation(); removeBeforePhoto(${i})" class="absolute top-1 right-1 bg-slate-900/80 text-white rounded-full w-5 h-5 text-[10px]"><i class="fa-solid fa-xmark"></i></button></div>`).join('');
+    }
+
     async function submitGoogleFormatReport() {
       const getManpower = (n) => document.querySelector(`input[name="manpower_${n}"]:checked`)?.value || '0';
       const siteName = document.getElementById('formSiteName').value.trim();
@@ -1116,9 +1142,8 @@
         estimatePrice: document.getElementById('formEstimatePrice').value.trim(),
         manpower: { 
           yoshii: getManpower('yoshii'), 
-          fujii: getManpower('fujii'),
-          kumano: getManpower('kumano'), 
           hisamoto: getManpower('hisamoto'), 
+          kumano: getManpower('kumano'), 
           takagawa: getManpower('takagawa') 
         },
         wasteAmount: document.getElementById('formWasteAmount').value.trim(),
@@ -1139,10 +1164,12 @@
       } else {
          if (editingReportId) dailyReports[dailyReports.findIndex(r=>r.id===editingReportId)] = reportData;
          else dailyReports.unshift(reportData);
-         saveDataToStorage(); renderReportList(); showToast('日報を保存しました');
+         saveDataToStorage(); 
+         updateReportMonthFilterOptions();
+         renderReportList(); 
+         showToast('日報を保存しました');
       }
 
-      // GASへの送信
       if (gasWebhookUrl) {
         const btn = document.getElementById('submitReportBtn');
         btn.disabled = true;
@@ -1165,9 +1192,215 @@
          db.collection("reports").doc(reportId).delete(); showToast('日報を削除し同期しました');
       } else {
          dailyReports = dailyReports.filter(r => r.id !== reportId);
-         saveDataToStorage(); renderReportList(); showToast('日報を削除しました');
+         saveDataToStorage(); 
+         updateReportMonthFilterOptions();
+         renderReportList(); 
+         showToast('日報を削除しました');
       }
       if (editingReportId === reportId) resetReportForm();
+    }
+
+    function updateReportMonthFilterOptions() {
+      const select = document.getElementById('reportMonthFilter');
+      if (!select) return;
+
+      const monthsSet = new Set();
+      dailyReports.forEach(r => {
+        if (r.workDate && r.workDate.length >= 7) {
+          monthsSet.add(r.workDate.substring(0, 7));
+        }
+      });
+      // 現在のカレンダー表示月も含める
+      const curCalMonth = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+      monthsSet.add(curCalMonth);
+
+      const sortedMonths = Array.from(monthsSet).sort().reverse();
+      const currentSelected = selectedReportMonth;
+      select.innerHTML = '<option value="all">全期間表示 (全件)</option>';
+
+      sortedMonths.forEach(m => {
+        const parts = m.split('-');
+        const count = dailyReports.filter(r => r.workDate && r.workDate.startsWith(m)).length;
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = `${parts[0]}年${parseInt(parts[1], 10)}月 (${count}件)`;
+        if (m === currentSelected) opt.selected = true;
+        select.appendChild(opt);
+      });
+      if (currentSelected === 'all') select.value = 'all';
+    }
+
+    function onReportMonthFilterChange(val) {
+      selectedReportMonth = val;
+      renderReportList();
+    }
+
+    function renderReportList() {
+      const list = document.getElementById('reportCardList'); 
+      if (!list) return;
+      list.innerHTML = '';
+      
+      document.getElementById('reportBadgeCount').textContent = dailyReports.length;
+      document.getElementById('reportTotalCount').textContent = `全体: ${dailyReports.length}件`;
+
+      // 選択月でのフィルタリング
+      const filtered = (selectedReportMonth === 'all')
+        ? dailyReports
+        : dailyReports.filter(r => r.workDate && r.workDate.startsWith(selectedReportMonth));
+
+      // 月別サマリーの計算
+      const summaryBar = document.getElementById('reportMonthSummaryBar');
+      if (summaryBar) {
+        let totalManpower = 0;
+        let totalWaste = 0;
+        filtered.forEach(r => {
+          if (r.manpower) {
+            totalManpower += (parseFloat(r.manpower.yoshii) || 0);
+            totalManpower += (parseFloat(r.manpower.hisamoto) || 0);
+            totalManpower += (parseFloat(r.manpower.kumano) || 0);
+            totalManpower += (parseFloat(r.manpower.takagawa) || 0);
+          }
+          if (r.wasteAmount) {
+            totalWaste += (parseFloat(r.wasteAmount) || 0);
+          }
+        });
+        document.getElementById('summaryFilteredCount').textContent = `${filtered.length} 件`;
+        document.getElementById('summaryFilteredManpower').textContent = `${totalManpower.toFixed(1)} 人工`;
+        document.getElementById('summaryFilteredWaste').textContent = `${totalWaste.toLocaleString()} kg`;
+      }
+
+      if (!filtered.length) { 
+        list.innerHTML = `<p class="text-center text-xs text-slate-400 py-6">該当する月の日報はありません</p>`; 
+        return; 
+      }
+
+      filtered.forEach(r => {
+        const team = TEAM_INFO[r.teamId] || { name: r.teamName || '班未定', color: 'bg-slate-700' };
+        const c = document.createElement('div'); 
+        c.className = 'p-3.5 bg-slate-50 border border-slate-200 rounded-2xl shadow-xs text-xs space-y-2';
+        c.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="flex items-center space-x-1.5 mb-1">
+                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded text-white ${team.color}">${team.name}</span>
+                <span class="font-bold text-slate-500 text-[11px]">${r.workDate}</span>
+                <span class="text-[10px] font-bold px-1.5 py-0.2 rounded ${r.workStatus === '完工' ? 'bg-emerald-100 text-emerald-800' : 'bg-indigo-100 text-indigo-800'}">${r.workStatus}</span>
+              </div>
+              <h4 class="font-bold text-slate-900 text-sm">${r.siteName}</h4>
+            </div>
+            <div class="flex items-center space-x-1">
+              <button onclick="copyReportAsFormText('${r.id}')" title="LINE・日報テキストをコピー" class="text-slate-500 hover:text-slate-800 p-1 bg-white border border-slate-200 rounded-lg text-xs"><i class="fa-regular fa-copy"></i></button>
+              <button onclick="editReportItem('${r.id}')" title="編集" class="text-indigo-600 hover:text-indigo-800 p-1 bg-white border border-slate-200 rounded-lg text-xs"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button onclick="deleteReportItem('${r.id}')" title="削除" class="text-rose-500 hover:text-rose-700 p-1 bg-white border border-slate-200 rounded-lg text-xs"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+          </div>
+          <div class="text-[11px] text-slate-600 grid grid-cols-2 gap-1 bg-white p-2 rounded-xl border border-slate-100">
+            <div>進捗: <strong>${r.progressRate || '-'}</strong></div>
+            <div>残材: <strong>${r.wasteAmount ? r.wasteAmount + 'kg' : '-'}</strong></div>
+            <div>外注費: <strong>${r.outsourceFee ? '¥' + Number(r.outsourceFee).toLocaleString() : 'なし'}</strong></div>
+            <div>害虫ブロック: <strong>${r.pestBlock ? '受注あり' : 'なし'}</strong></div>
+          </div>
+          ${r.memo ? `<div class="text-[11px] text-slate-600 bg-slate-100/80 p-2 rounded-xl border border-slate-200"><span class="font-bold text-slate-700">メモ:</span> ${r.memo}</div>` : ''}
+        `;
+        list.appendChild(c);
+      });
+    }
+
+    function copyReportAsFormText(id) {
+      const r = dailyReports.find(x => x.id === id);
+      if (!r) return;
+      const team = TEAM_INFO[r.teamId]?.name || r.teamName || '';
+      const text = `【現場日報報告】\n■日付: ${r.workDate}\n■報告班: ${team}\n■現場名: ${r.siteName}\n■作業状況: ${r.workStatus} (${r.progressRate || '進捗未設定'})\n■人工: 吉井(${r.manpower?.yoshii || 0}), 久本(${r.manpower?.hisamoto || 0}), 熊野(${r.manpower?.kumano || 0}), 高川(${r.manpower?.takagawa || 0})\n■残材量: ${r.wasteAmount ? r.wasteAmount + 'kg' : 'なし'}\n■外注費: ${r.outsourceFee ? r.outsourceFee + '円' : 'なし'}\n■機材①: ${r.equipment1?.join(', ') || 'なし'}\n■機材②: ${r.equipment2?.join(', ') || 'なし'}\n■最終確認: ${r.finalCheck || '-'}\n■特記・メモ: ${r.memo || 'なし'}\n■害虫ブロック: ${r.pestBlock ? '受注' : 'なし'}`;
+      
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast('日報テキストをクリップボードにコピーしました！');
+      } catch (err) {
+        showToast('コピーに失敗しました');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function editReportItem(id) {
+       const r = dailyReports.find(x => x.id === id); 
+       if(!r) return;
+       editingReportId = id;
+       
+       const teamRadio = document.querySelector(`input[name="formReportTeam"][value="${r.teamId}"]`);
+       if (teamRadio) teamRadio.checked = true;
+       
+       document.getElementById('formWorkDate').value = r.workDate || '';
+       document.getElementById('formSiteName').value = r.siteName || '';
+       document.getElementById('formEstimatePrice').value = r.estimatePrice || '';
+       
+       ['yoshii', 'kumano', 'hisamoto', 'takagawa'].forEach(name => {
+         const val = r.manpower?.[name] || '0';
+         const rad = document.querySelector(`input[name="manpower_${name}"][value="${val}"]`);
+         if (rad) rad.checked = true;
+       });
+
+       document.getElementById('formWasteAmount').value = r.wasteAmount || '';
+       document.getElementById('formOutsourceFee').value = r.outsourceFee || '';
+       document.getElementById('formOutsourceFeeSub').value = r.outsourceFeeSub || '';
+
+       document.querySelectorAll('input[name="equipment1"]').forEach(cb => {
+         cb.checked = (r.equipment1 || []).includes(cb.value);
+       });
+       document.querySelectorAll('input[name="equipment2"]').forEach(cb => {
+         cb.checked = (r.equipment2 || []).includes(cb.value);
+       });
+
+       const statusRad = document.querySelector(`input[name="formWorkStatus"][value="${r.workStatus}"]`);
+       if (statusRad) statusRad.checked = true;
+
+       document.getElementById('formProgressRate').value = r.progressRate || '50% (半日・中間)';
+       document.getElementById('formFinalCheck').value = r.finalCheck || '【確認済】すぐに請求書発送してください';
+       document.getElementById('formMemo').value = r.memo || '';
+       document.getElementById('formPestBlock').checked = !!r.pestBlock;
+
+       document.getElementById('submitReportBtnText').textContent = '日報の変更を更新する';
+       document.getElementById('cancelEditReportBtn').classList.remove('hidden');
+       switchView('report');
+       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelReportEdit() {
+      resetReportForm();
+    }
+
+    function resetReportForm() { 
+      editingReportId = null; 
+      document.getElementById('formSiteName').value = ''; 
+      document.getElementById('formEstimatePrice').value = ''; 
+      document.getElementById('formWasteAmount').value = ''; 
+      document.getElementById('formOutsourceFee').value = ''; 
+      document.getElementById('formOutsourceFeeSub').value = ''; 
+      document.getElementById('formMemo').value = ''; 
+      document.getElementById('formPestBlock').checked = false; 
+      document.getElementById('submitReportBtnText').textContent = '日報を登録・保存する';
+      document.getElementById('cancelEditReportBtn').classList.add('hidden');
+      ['yoshii', 'kumano', 'hisamoto', 'takagawa'].forEach(name => {
+        const rad = document.querySelector(`input[name="manpower_${name}"][value="0"]`);
+        if (rad) rad.checked = true;
+      });
+      document.querySelectorAll('input[name="equipment1"]').forEach(cb => cb.checked = false);
+      document.querySelectorAll('input[name="equipment2"]').forEach(cb => cb.checked = false);
+    }
+
+    function createReportFromSchedule(id) { 
+      const s = schedules.find(x=>x.id===id); 
+      if(!s) return; 
+      document.getElementById('formSiteName').value = s.customer; 
+      document.getElementById('formWorkDate').value = s.date; 
+      if (s.estimatePrice) document.getElementById('formEstimatePrice').value = s.estimatePrice;
+      const teamRad = document.querySelector(`input[name="formReportTeam"][value="${s.teamId}"]`);
+      if (teamRad) teamRad.checked = true;
+      switchView('report'); 
+      closeScheduleDetailModal(); 
     }
 
     function openScheduleDetailModal(id) {
@@ -1195,6 +1428,13 @@
       const modal = document.getElementById('scheduleDetailModal');
       modal.classList.remove('hidden');
       modal.classList.add('flex');
+    }
+
+    function closeScheduleDetailModal() {
+      const modal = document.getElementById('scheduleDetailModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      currentDetailScheduleId = null;
     }
 
     function openEditScheduleModal(id) {
@@ -1239,6 +1479,30 @@
       modal.classList.add('flex');
     }
 
+    function closeAddScheduleModal() {
+      const modal = document.getElementById('addScheduleModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function autofillFromSelectedDaySchedule() {
+      const dayEvents = schedules.filter(s => isDateInRange(selectedDateStr, s.date, s.endDate));
+      if(dayEvents.length > 0) createReportFromSchedule(dayEvents[0].id);
+      else showToast('選択された日の現場予定はありません');
+    }
+
+    function autofillEstimatePriceFromSchedule() {
+      const d = document.getElementById('formWorkDate').value;
+      const s = document.getElementById('formSiteName').value.trim();
+      const match = schedules.find(x => isDateInRange(d, x.date, x.endDate) || (s && x.customer.includes(s)));
+      if(match && match.estimatePrice) {
+        document.getElementById('formEstimatePrice').value = match.estimatePrice;
+        showToast(`予定から金額(¥${Number(match.estimatePrice).toLocaleString()})を反映しました`);
+      } else {
+        showToast('該当する見積価格が見つかりません');
+      }
+    }
+
     function openGoogleMapNav() {
       const item = schedules.find(s => s.id === currentDetailScheduleId);
       if(item && (item.location || item.postalCode)) {
@@ -1249,6 +1513,7 @@
       }
     }
 
+    let currentUploadedFullBase64 = null;
     function openAiScanModal() { 
       document.getElementById('dropArea').classList.remove('hidden');
       document.getElementById('previewContainer').classList.add('hidden');
@@ -1266,9 +1531,32 @@
       modal.classList.remove('hidden'); 
       modal.classList.add('flex'); 
     }
+    
+    function closeAiScanModal() { 
+      const modal = document.getElementById('aiScanModal');
+      modal.classList.add('hidden'); 
+      modal.classList.remove('flex'); 
+    }
+    
+    function triggerFileInput() { document.getElementById('estimateFileInput').click(); }
+    
+    async function handleFileSelect(event) {
+      const file = event.target.files[0]; 
+      if(!file) return;
+      processEstimateFile(file);
+    }
+
+    async function processEstimateFile(file) {
+      document.getElementById('dropArea').classList.add('hidden'); 
+      document.getElementById('previewContainer').classList.remove('hidden');
+      document.getElementById('aiLoadingOverlay').classList.remove('hidden');
+      const compressed = await compressImageFile(file, 1800, 0.85);
+      currentUploadedFullBase64 = compressed;
+      document.getElementById('previewImage').src = compressed;
+      runGeminiExtraction(compressed.split(',')[1], 'image/jpeg');
+    }
 
     async function runGeminiExtraction(base64Data, mimeType) {
-      // 日本の造園・土木・建築の見積書フォーマットに特化した厳密プロンプト
       const systemPrompt = `あなたは日本の造園・外構・土木・建築工事の見積書解析の専門家です。
 アップロードされた画像（見積書・請求書・発注書・工程表）から、現場管理に必要な以下の情報を正確に読み取ってJSONで出力してください。
 
@@ -1341,7 +1629,6 @@
 
         const p = JSON.parse(jsonText);
 
-        // 抽出結果の自動反映
         if (p.customer) document.getElementById('aiCustomer').value = p.customer.trim();
         if (p.postalCode) {
           let zip = p.postalCode.trim();
@@ -1375,7 +1662,7 @@
       resBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> AIが施工リスクを診断中...';
       try {
         const photoData = item.beforePhotos[0].includes(',') ? item.beforePhotos[0].split(',')[1] : item.beforePhotos[0];
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${activeApiKey}`, {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${activeApiKey}`, {
           method: 'POST', 
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
@@ -1401,7 +1688,7 @@
       if (!m.value.trim()) return showToast('推敲する下書きを入力してください');
       showToast('AI推敲中...');
       try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${activeApiKey}`, { 
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${activeApiKey}`, { 
           method: 'POST', 
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: [{ parts: [{ text: `以下の現場日報メモを、報告書として簡潔明瞭で角の立たない丁寧なビジネス文言に推敲してください。余計な前置きは含めず、本文のみを回答してください:\n\n${m.value}` }] }] }) 
@@ -1432,8 +1719,8 @@
 
         // 1. 今日の短期予報 (data[0])：当日・明日・明後日の詳細情報
         if (data && data[0] && data[0].timeSeries) {
-          const shortWeatherSeries = data[0].timeSeries[0]; // 天気マーク
-          const shortPopSeries = data[0].timeSeries[1];     // 降水確率
+          const shortWeatherSeries = data[0].timeSeries[0];
+          const shortPopSeries = data[0].timeSeries[1];
           
           if (shortWeatherSeries && shortWeatherSeries.timeDefines) {
             shortWeatherSeries.timeDefines.forEach((timeStr, i) => {
@@ -1441,7 +1728,6 @@
               const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
               const weatherCode = shortWeatherSeries.areas[0]?.weatherCodes?.[i];
               
-              // 当日の直近降水確率を探す
               let currentPop = '';
               if (shortPopSeries && shortPopSeries.timeDefines) {
                 const popIndex = shortPopSeries.timeDefines.findIndex(pt => {
@@ -1473,7 +1759,6 @@
               const weatherCode = weekly.areas[0]?.weatherCodes?.[i];
               const popVal = weekly.areas[0]?.pops?.[i] || '';
 
-              // 当日データが短期予報にあれば降水確率の補完のみ、無ければ新規登録
               if (!weeklyWeather[dateKey]) {
                 weeklyWeather[dateKey] = {
                   emoji: getWeatherEmoji(weatherCode),
@@ -1495,217 +1780,12 @@
 
     const getWeatherEmoji = (c) => {
       if (!c) return '☀️';
-      if (c.startsWith('1')) return '☀️'; // 晴れ系
-      if (c.startsWith('2')) return '☁️'; // 曇り系
-      if (c.startsWith('3')) return '☔'; // 雨系
-      if (c.startsWith('4')) return '⛄'; // 雪系
+      if (c.startsWith('1')) return '☀️';
+      if (c.startsWith('2')) return '☁️';
+      if (c.startsWith('3')) return '☔';
+      if (c.startsWith('4')) return '⛄';
       return '☁️';
     };
-
-    function renderReportList() {
-      const list = document.getElementById('reportCardList'); 
-      list.innerHTML = '';
-      document.getElementById('reportBadgeCount').textContent = dailyReports.length;
-      document.getElementById('reportTotalCount').textContent = `${dailyReports.length}件`;
-      if (!dailyReports.length) { 
-        list.innerHTML = `<p class="text-center text-xs text-slate-400 py-6">提出済みの日報はありません</p>`; 
-        return; 
-      }
-      dailyReports.forEach(r => {
-        const team = TEAM_INFO[r.teamId] || { name: r.teamName || '班未定', color: 'bg-slate-700' };
-        const c = document.createElement('div'); 
-        c.className = 'p-3.5 bg-slate-50 border border-slate-200 rounded-2xl shadow-xs text-xs space-y-2';
-        c.innerHTML = `
-          <div class="flex justify-between items-start">
-            <div>
-              <div class="flex items-center space-x-1.5 mb-1">
-                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded text-white ${team.color}">${team.name}</span>
-                <span class="font-bold text-slate-500 text-[11px]">${r.workDate}</span>
-                <span class="text-[10px] font-bold px-1.5 py-0.2 rounded ${r.workStatus === '完工' ? 'bg-emerald-100 text-emerald-800' : 'bg-indigo-100 text-indigo-800'}">${r.workStatus}</span>
-              </div>
-              <h4 class="font-bold text-slate-900 text-sm">${r.siteName}</h4>
-            </div>
-            <div class="flex items-center space-x-1">
-              <button onclick="copyReportAsFormText('${r.id}')" title="LINE・日報テキストをコピー" class="text-slate-500 hover:text-slate-800 p-1 bg-white border border-slate-200 rounded-lg text-xs"><i class="fa-regular fa-copy"></i></button>
-              <button onclick="editReportItem('${r.id}')" title="編集" class="text-indigo-600 hover:text-indigo-800 p-1 bg-white border border-slate-200 rounded-lg text-xs"><i class="fa-solid fa-pen-to-square"></i></button>
-              <button onclick="deleteReportItem('${r.id}')" title="削除" class="text-rose-500 hover:text-rose-700 p-1 bg-white border border-slate-200 rounded-lg text-xs"><i class="fa-regular fa-trash-can"></i></button>
-            </div>
-          </div>
-          <div class="text-[11px] text-slate-600 grid grid-cols-2 gap-1 bg-white p-2 rounded-xl border border-slate-100">
-            <div>進捗: <strong>${r.progressRate || '-'}</strong></div>
-            <div>残材: <strong>${r.wasteAmount ? r.wasteAmount + 'kg' : '-'}</strong></div>
-            <div>外注費: <strong>${r.outsourceFee ? '¥' + Number(r.outsourceFee).toLocaleString() : 'なし'}</strong></div>
-            <div>害虫ブロック: <strong>${r.pestBlock ? '受注あり' : 'なし'}</strong></div>
-          </div>
-          ${r.memo ? `<div class="text-[11px] text-slate-600 bg-slate-100/80 p-2 rounded-xl border border-slate-200"><span class="font-bold text-slate-700">メモ:</span> ${r.memo}</div>` : ''}
-        `;
-        list.appendChild(c);
-      });
-    }
-
-    function copyReportAsFormText(id) {
-      const r = dailyReports.find(x => x.id === id);
-      if (!r) return;
-      const team = TEAM_INFO[r.teamId]?.name || r.teamName || '';
-      const text = `【現場日報報告】\n■日付: ${r.workDate}\n■報告班: ${team}\n■現場名: ${r.siteName}\n■作業状況: ${r.workStatus} (${r.progressRate || '進捗未設定'})\n■人工: 吉井(${r.manpower?.yoshii || 0}), 藤井(${r.manpower?.fujii || 0}), 熊野(${r.manpower?.kumano || 0}), 久本(${r.manpower?.hisamoto || 0}), 高川(${r.manpower?.takagawa || 0})\n■残材量: ${r.wasteAmount ? r.wasteAmount + 'kg' : 'なし'}\n■外注費: ${r.outsourceFee ? r.outsourceFee + '円' : 'なし'}\n■機材①: ${r.equipment1?.join(', ') || 'なし'}\n■機材②: ${r.equipment2?.join(', ') || 'なし'}\n■最終確認: ${r.finalCheck || '-'}\n■特記・メモ: ${r.memo || 'なし'}\n■害虫ブロック: ${r.pestBlock ? '受注' : 'なし'}`;
-      
-      navigator.clipboard.writeText(text).then(() => {
-        showToast('日報テキストをクリップボードにコピーしました！');
-      }).catch(() => {
-        showToast('コピーに失敗しました');
-      });
-    }
-
-    function editReportItem(id) {
-       const r = dailyReports.find(x => x.id === id); 
-       if(!r) return;
-       editingReportId = id;
-       
-       const teamRadio = document.querySelector(`input[name="formReportTeam"][value="${r.teamId}"]`);
-       if (teamRadio) teamRadio.checked = true;
-       
-       document.getElementById('formWorkDate').value = r.workDate || '';
-       document.getElementById('formSiteName').value = r.siteName || '';
-       document.getElementById('formEstimatePrice').value = r.estimatePrice || '';
-       
-       ['yoshii', 'fujii', 'kumano', 'hisamoto', 'takagawa'].forEach(name => {
-         const val = r.manpower?.[name] || '0';
-         const rad = document.querySelector(`input[name="manpower_${name}"][value="${val}"]`);
-         if (rad) rad.checked = true;
-       });
-
-       document.getElementById('formWasteAmount').value = r.wasteAmount || '';
-       document.getElementById('formOutsourceFee').value = r.outsourceFee || '';
-       document.getElementById('formOutsourceFeeSub').value = r.outsourceFeeSub || '';
-
-       document.querySelectorAll('input[name="equipment1"]').forEach(cb => {
-         cb.checked = (r.equipment1 || []).includes(cb.value);
-       });
-       document.querySelectorAll('input[name="equipment2"]').forEach(cb => {
-         cb.checked = (r.equipment2 || []).includes(cb.value);
-       });
-
-       const statusRad = document.querySelector(`input[name="formWorkStatus"][value="${r.workStatus}"]`);
-       if (statusRad) statusRad.checked = true;
-
-       document.getElementById('formProgressRate').value = r.progressRate || '50% (半日・中間)';
-       document.getElementById('formFinalCheck').value = r.finalCheck || '【確認済】すぐに請求書発送してください';
-       document.getElementById('formMemo').value = r.memo || '';
-       document.getElementById('formPestBlock').checked = !!r.pestBlock;
-
-       document.getElementById('submitReportBtnText').textContent = '日報の変更を更新する';
-       document.getElementById('cancelEditReportBtn').classList.remove('hidden');
-       switchView('report');
-       window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function cancelReportEdit() {
-      resetReportForm();
-    }
-
-    function resetReportForm() { 
-      editingReportId = null; 
-      document.getElementById('formSiteName').value = ''; 
-      document.getElementById('formEstimatePrice').value = ''; 
-      document.getElementById('formWasteAmount').value = ''; 
-      document.getElementById('formOutsourceFee').value = ''; 
-      document.getElementById('formOutsourceFeeSub').value = ''; 
-      document.getElementById('formMemo').value = ''; 
-      document.getElementById('formPestBlock').checked = false; 
-      document.getElementById('submitReportBtnText').textContent = '日報を登録・保存する';
-      document.getElementById('cancelEditReportBtn').classList.add('hidden');
-      ['yoshii', 'fujii', 'kumano', 'hisamoto', 'takagawa'].forEach(name => {
-        const rad = document.querySelector(`input[name="manpower_${name}"][value="0"]`);
-        if (rad) rad.checked = true;
-      });
-      document.querySelectorAll('input[name="equipment1"]').forEach(cb => cb.checked = false);
-      document.querySelectorAll('input[name="equipment2"]').forEach(cb => cb.checked = false);
-    }
-
-    function createReportFromSchedule(id) { 
-      const s = schedules.find(x=>x.id===id); 
-      if(!s) return; 
-      document.getElementById('formSiteName').value = s.customer; 
-      document.getElementById('formWorkDate').value = s.date; 
-      if (s.estimatePrice) document.getElementById('formEstimatePrice').value = s.estimatePrice;
-      const teamRad = document.querySelector(`input[name="formReportTeam"][value="${s.teamId}"]`);
-      if (teamRad) teamRad.checked = true;
-      switchView('report'); 
-      closeScheduleDetailModal(); 
-    }
-
-    function openAddScheduleModal() {
-      editingScheduleId = null;
-      document.getElementById('scheduleModalTitle').textContent = '現場スケジュールの追加';
-      document.getElementById('saveScheduleBtn').textContent = '登録する';
-      document.getElementById('modalSchedCustomer').value = '';
-      document.getElementById('modalSchedDate').value = selectedDateStr;
-      document.getElementById('modalSchedEndDate').value = selectedDateStr;
-      document.getElementById('modalSchedTime').value = '08:30';
-      document.getElementById('modalSchedEndTime').value = '17:00';
-      document.getElementById('modalSchedPrice').value = '';
-      document.getElementById('modalSchedLocation').value = '';
-      document.getElementById('modalSchedWarnings').value = '';
-      
-      const modal = document.getElementById('addScheduleModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-
-    function openEditScheduleModal(id) {
-      editingScheduleId = id;
-      const item = schedules.find(s => s.id === id);
-      if(!item) return;
-      document.getElementById('scheduleModalTitle').textContent = '現場スケジュールの編集';
-      document.getElementById('saveScheduleBtn').textContent = '更新する';
-      document.getElementById('modalSchedTeam').value = item.teamId;
-      document.getElementById('modalSchedCustomer').value = item.customer;
-      document.getElementById('modalSchedDate').value = item.date;
-      document.getElementById('modalSchedEndDate').value = item.endDate || item.date;
-      document.getElementById('modalSchedTime').value = item.time || '08:30';
-      document.getElementById('modalSchedEndTime').value = item.endTime || '17:00';
-      document.getElementById('modalSchedPrice').value = item.estimatePrice || '';
-      document.getElementById('modalSchedLocation').value = item.location || '';
-      document.getElementById('modalSchedWarnings').value = item.warnings || '';
-      
-      closeScheduleDetailModal();
-      const modal = document.getElementById('addScheduleModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-
-    function closeAddScheduleModal() {
-      const modal = document.getElementById('addScheduleModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-
-    function autofillFromSelectedDaySchedule() {
-      const dayEvents = schedules.filter(s => isDateInRange(selectedDateStr, s.date, s.endDate));
-      if(dayEvents.length > 0) createReportFromSchedule(dayEvents[0].id);
-      else showToast('選択された日の現場予定はありません');
-    }
-
-    function autofillEstimatePriceFromSchedule() {
-      const d = document.getElementById('formWorkDate').value;
-      const s = document.getElementById('formSiteName').value.trim();
-      const match = schedules.find(x => isDateInRange(d, x.date, x.endDate) || (s && x.customer.includes(s)));
-      if(match && match.estimatePrice) {
-        document.getElementById('formEstimatePrice').value = match.estimatePrice;
-        showToast(`予定から金額(¥${Number(match.estimatePrice).toLocaleString()})を反映しました`);
-      } else {
-        showToast('該当する見積価格が見つかりません');
-      }
-    }
-
-    function openGoogleMapNav() {
-      const item = schedules.find(s => s.id === currentDetailScheduleId);
-      if(item && item.location) {
-        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.location)}`, '_blank');
-      } else {
-        showToast('住所が入力されていません');
-      }
-    }
 
     function exportDataToFile() {
       const str = JSON.stringify({ schedules, dailyReports }, null, 2);
@@ -1738,44 +1818,6 @@
         }
       };
       if (e.target.files[0]) reader.readAsText(e.target.files[0]);
-    }
-
-    let currentUploadedFullBase64 = null;
-    function openAiScanModal() { 
-      document.getElementById('dropArea').classList.remove('hidden');
-      document.getElementById('previewContainer').classList.add('hidden');
-      document.getElementById('extractionResults').classList.add('hidden');
-      document.getElementById('aiDate').value = selectedDateStr;
-      document.getElementById('aiEndDate').value = selectedDateStr;
-      document.getElementById('aiTime').value = '08:30';
-      document.getElementById('aiEndTime').value = '17:00';
-      const modal = document.getElementById('aiScanModal');
-      modal.classList.remove('hidden'); 
-      modal.classList.add('flex'); 
-    }
-    
-    function closeAiScanModal() { 
-      const modal = document.getElementById('aiScanModal');
-      modal.classList.add('hidden'); 
-      modal.classList.remove('flex'); 
-    }
-    
-    function triggerFileInput() { document.getElementById('estimateFileInput').click(); }
-    
-    async function handleFileSelect(event) {
-      const file = event.target.files[0]; 
-      if(!file) return;
-      processEstimateFile(file);
-    }
-
-    async function processEstimateFile(file) {
-      document.getElementById('dropArea').classList.add('hidden'); 
-      document.getElementById('previewContainer').classList.remove('hidden');
-      document.getElementById('aiLoadingOverlay').classList.remove('hidden');
-      const compressed = await compressImageFile(file, 1000, 0.75);
-      currentUploadedFullBase64 = compressed;
-      document.getElementById('previewImage').src = compressed;
-      runGeminiExtraction(compressed.split(',')[1], 'image/jpeg');
     }
 
     function toggleOptionsMenu() { 
