@@ -440,7 +440,16 @@
             <div><label class="block text-[10px] font-bold text-slate-500">終了時間</label><input id="aiEndTime" type="time" class="w-full text-xs border border-slate-200 rounded-lg p-2 bg-slate-50 font-bold"></div>
             <div><label class="block text-[10px] font-bold text-indigo-700">見積価格</label><input id="aiPrice" type="text" class="w-full text-xs border border-indigo-200 rounded-lg p-2 bg-indigo-50/50 font-bold text-indigo-700"></div>
           </div>
-          <div><label class="block text-[10px] font-bold text-slate-500">現場住所</label><input id="aiLocation" type="text" class="w-full text-xs border border-slate-200 rounded-lg p-2 bg-slate-50"></div>
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-500">郵便番号</label>
+              <input id="aiPostalCode" type="text" placeholder="〒762-0000" class="w-full text-xs border border-slate-200 rounded-lg p-2 bg-slate-50 font-mono">
+            </div>
+            <div class="col-span-2">
+              <label class="block text-[10px] font-bold text-slate-500">現場住所</label>
+              <input id="aiLocation" type="text" placeholder="都道府県 市区町村 番地" class="w-full text-xs border border-slate-200 rounded-lg p-2 bg-slate-50">
+            </div>
+          </div>
           <div><label class="block text-[10px] font-bold text-slate-500">作業内容</label><input id="aiDetail" type="text" class="w-full text-xs border border-slate-200 rounded-lg p-2 bg-slate-50"></div>
           <button onclick="saveAiExtractedSchedule()" class="w-full py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-md">カレンダーに登録（見積価格を反映）</button>
         </div>
@@ -475,7 +484,16 @@
           <div><label class="block text-[10px] font-bold text-slate-500 mb-1">終了時間</label><input id="modalSchedEndTime" type="time" value="17:00" class="w-full text-xs border border-slate-200 rounded-xl p-2 bg-slate-50 font-bold"></div>
           <div><label class="block text-[10px] font-bold text-slate-500 mb-1">見積価格(円)</label><input id="modalSchedPrice" type="text" class="w-full text-xs border border-slate-200 rounded-xl p-2 bg-slate-50 font-bold"></div>
         </div>
-        <div><label class="block text-[10px] font-bold text-slate-500 mb-1">現場住所 / 詳細</label><input id="modalSchedLocation" type="text" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 bg-slate-50"></div>
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-500 mb-1">郵便番号</label>
+            <input id="modalSchedPostalCode" type="text" placeholder="〒762-0000" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 bg-slate-50 font-mono">
+          </div>
+          <div class="col-span-2">
+            <label class="block text-[10px] font-bold text-slate-500 mb-1">現場住所 / 詳細</label>
+            <input id="modalSchedLocation" type="text" placeholder="都道府県 市区町村 番地" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 bg-slate-50">
+          </div>
+        </div>
         <div><label class="block text-[10px] font-bold text-slate-500 mb-1">注意事項</label><textarea id="modalSchedWarnings" rows="2" class="w-full text-xs border border-slate-200 rounded-xl p-2 bg-slate-50 resize-none"></textarea></div>
         <div class="pt-2 flex justify-end space-x-2">
           <button onclick="closeAddScheduleModal()" class="px-4 py-2.5 text-xs font-bold text-slate-500 rounded-xl">キャンセル</button>
@@ -519,18 +537,18 @@
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
         <h4 class="font-bold text-sm text-slate-900 flex items-center"><i class="fa-solid fa-mobile-screen-button text-emerald-600 mr-2"></i>ホーム画面への追加</h4>
         <button onclick="togglePwaInstallGuide()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-      </div>
-      <div class="text-xs text-slate-600 space-y-3 leading-relaxed">
-        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-          <strong class="text-slate-800 block text-xs">【iPhone (Safari) の場合】</strong>
-          <p>1. 画面下の <i class="fa-solid fa-arrow-up-from-bracket text-blue-500"></i> (共有) ボタンをタップ</p>
-          <p>2. メニュー内の「<strong>ホーム画面に追加</strong>」を選択</p>
-          <p>3. 右上の「追加」を押すとアプリとして全画面起動できます。</p>
-        </div>
-        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-          <strong class="text-slate-800 block text-xs">【Android (Chrome) の場合】</strong>
-          <p>1. 右上の <i class="fa-solid fa-ellipsis-vertical text-slate-700"></i> (メニュー) をタップ</p>
-          <p>2. 「<strong>アプリをインストール</strong>」または「<strong>ホーム画面に追加</strong>」を選択</p>
+      <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 text-xs">
+        <div class="flex items-center justify-between"><span class="text-slate-500 font-bold"><i class="fa-regular fa-calendar mr-1"></i>日程</span><span id="detailDateDisplay" class="font-extrabold text-slate-800"></span></div>
+        <div class="flex items-center justify-between"><span class="text-slate-500 font-bold"><i class="fa-solid fa-yen-sign mr-1"></i>見積価格</span><span id="detailPriceDisplay" class="font-extrabold text-indigo-600 text-sm"></span></div>
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-slate-500 font-bold"><i class="fa-solid fa-location-dot mr-1"></i>現場住所</span>
+            <button id="openMapBtn" onclick="openGoogleMapNav()" class="text-[10px] font-bold text-emerald-700 bg-emerald-100 hover:bg-emerald-200 px-2 py-0.5 rounded-md flex items-center"><i class="fa-solid fa-map-location-dot mr-1"></i>マップで開く</button>
+          </div>
+          <div class="bg-white p-2 rounded-xl border border-slate-100 space-y-0.5">
+            <span id="detailPostalCodeText" class="text-[11px] font-bold text-slate-500 block font-mono"></span>
+            <p id="detailLocationText" class="font-semibold text-slate-800"></p>
+          </div>
         </div>
       </div>
       <button onclick="togglePwaInstallGuide()" class="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold">閉じる</button>
@@ -929,6 +947,9 @@
         card.className = 'p-3 bg-slate-50/90 border border-slate-200/80 rounded-2xl flex items-start justify-between hover:bg-slate-100/80 cursor-pointer space-x-2';
         card.onclick = (e) => { if (!e.target.closest('button')) openScheduleDetailModal(item.id); };
         
+        const postalBadge = item.postalCode ? `<span class="text-[10px] text-slate-500 mr-1 font-mono font-bold">${item.postalCode}</span>` : '';
+        const addressText = item.location ? `${postalBadge}${item.location}` : '';
+
         card.innerHTML = `
           <div class="space-y-1.5 flex-1">
             <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
@@ -936,7 +957,7 @@
               <span class="text-xs font-bold text-slate-900">${item.customer}</span>
               <span class="text-[10px] font-semibold ${t.bgLight} ${t.textCol} px-1.5 py-0.2 rounded border border-current">${t.name}</span>
             </div>
-            <div class="text-xs text-slate-500">${item.location ? `<span class="flex items-center"><i class="fa-solid fa-location-dot mr-1 text-[10px] text-slate-400"></i>${item.location}</span>` : ''} ${item.estimatePrice ? `<span class="text-[10px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.2 rounded flex items-center mt-1 w-max"><i class="fa-solid fa-yen-sign mr-0.5 text-[9px]"></i>${Number(item.estimatePrice).toLocaleString()}</span>` : ''}</div>
+            <div class="text-xs text-slate-500">${addressText ? `<span class="flex items-center"><i class="fa-solid fa-location-dot mr-1 text-[10px] text-slate-400"></i>${addressText}</span>` : ''} ${item.estimatePrice ? `<span class="text-[10px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.2 rounded flex items-center mt-1 w-max"><i class="fa-solid fa-yen-sign mr-0.5 text-[9px]"></i>${Number(item.estimatePrice).toLocaleString()}</span>` : ''}</div>
           </div>
           <div class="flex flex-col items-end space-y-1">
             <button onclick="createReportFromSchedule('${item.id}')" class="text-xs text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg font-bold">日報</button>
@@ -956,6 +977,9 @@
       const date = document.getElementById('modalSchedDate').value;
       if (!customer || !date) { showToast('顧客名と日付を入力してください'); return; }
 
+      const rawPostal = document.getElementById('modalSchedPostalCode').value.trim();
+      const formattedPostal = rawPostal ? (rawPostal.startsWith('〒') ? rawPostal : '〒' + rawPostal) : '';
+
       const newItem = {
         id: editingScheduleId || ('sc_' + Date.now()),
         teamId: document.getElementById('modalSchedTeam').value,
@@ -964,6 +988,7 @@
         time: document.getElementById('modalSchedTime').value || '08:30',
         endTime: document.getElementById('modalSchedEndTime').value || '17:00',
         customer: customer,
+        postalCode: formattedPostal,
         location: document.getElementById('modalSchedLocation').value.trim(),
         estimatePrice: document.getElementById('modalSchedPrice').value.trim().replace(/[^0-9]/g, ''),
         warnings: document.getElementById('modalSchedWarnings').value.trim(),
@@ -987,6 +1012,9 @@
 
     function saveAiExtractedSchedule() {
       const date = document.getElementById('aiDate').value || selectedDateStr;
+      const rawPostal = document.getElementById('aiPostalCode').value.trim();
+      const formattedPostal = rawPostal ? (rawPostal.startsWith('〒') ? rawPostal : '〒' + rawPostal) : '';
+
       const newItem = {
         id: 'sc_' + Date.now(),
         teamId: document.getElementById('aiTeam').value,
@@ -995,6 +1023,7 @@
         time: document.getElementById('aiTime').value || '08:30',
         endTime: document.getElementById('aiEndTime').value || '17:00',
         customer: document.getElementById('aiCustomer').value.trim() || '新規現場（見積書）',
+        postalCode: formattedPostal,
         location: document.getElementById('aiLocation').value.trim(),
         estimatePrice: document.getElementById('aiPrice').value.trim().replace(/[^0-9]/g, ''),
         detail: document.getElementById('aiDetail').value.trim(),
@@ -1004,12 +1033,12 @@
 
       if (db) {
          db.collection("schedules").doc(newItem.id).set(newItem);
-         showToast('見積価格を含めクラウドに同期しました！');
+         showToast('郵便番号・住所を含めクラウドに同期しました！');
       } else {
          schedules.push(newItem);
          saveDataToStorage();
          renderAll();
-         showToast('見積価格を含めて保存しました');
+         showToast('郵便番号・住所を含めて保存しました');
       }
       selectedDateStr = date;
       closeAiScanModal();
@@ -1150,6 +1179,15 @@
       document.getElementById('detailDateDisplay').textContent = item.date + (item.endDate && item.endDate !== item.date ? ` 〜 ${item.endDate}` : '');
       document.getElementById('detailTimeDisplay').textContent = `${item.time || '08:30'} 〜 ${item.endTime || '17:00'}`;
       document.getElementById('detailPriceDisplay').textContent = item.estimatePrice ? `¥${Number(item.estimatePrice).toLocaleString()}` : '未設定';
+      
+      const postalEl = document.getElementById('detailPostalCodeText');
+      if (item.postalCode) {
+        postalEl.textContent = item.postalCode;
+        postalEl.classList.remove('hidden');
+      } else {
+        postalEl.textContent = '';
+        postalEl.classList.add('hidden');
+      }
       document.getElementById('detailLocationText').textContent = item.location || '住所登録なし';
       document.getElementById('detailWarningsInput').value = item.warnings || '';
       renderBeforePhotoGrid(item.beforePhotos || []);
@@ -1159,17 +1197,74 @@
       modal.classList.add('flex');
     }
 
-    function closeScheduleDetailModal() {
-      const modal = document.getElementById('scheduleDetailModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      currentDetailScheduleId = null;
+    function openEditScheduleModal(id) {
+      editingScheduleId = id;
+      const item = schedules.find(s => s.id === id);
+      if(!item) return;
+      document.getElementById('scheduleModalTitle').textContent = '現場スケジュールの編集';
+      document.getElementById('saveScheduleBtn').textContent = '更新する';
+      document.getElementById('modalSchedTeam').value = item.teamId;
+      document.getElementById('modalSchedCustomer').value = item.customer;
+      document.getElementById('modalSchedDate').value = item.date;
+      document.getElementById('modalSchedEndDate').value = item.endDate || item.date;
+      document.getElementById('modalSchedTime').value = item.time || '08:30';
+      document.getElementById('modalSchedEndTime').value = item.endTime || '17:00';
+      document.getElementById('modalSchedPrice').value = item.estimatePrice || '';
+      document.getElementById('modalSchedPostalCode').value = item.postalCode || '';
+      document.getElementById('modalSchedLocation').value = item.location || '';
+      document.getElementById('modalSchedWarnings').value = item.warnings || '';
+      
+      closeScheduleDetailModal();
+      const modal = document.getElementById('addScheduleModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
 
-    function renderBeforePhotoGrid(photos) {
-      const grid = document.getElementById('beforePhotoGrid');
-      if (!photos || !photos.length) { grid.innerHTML = `<div class="col-span-3 text-center py-4 text-[11px] text-slate-400">施工前写真はありません</div>`; return; }
-      grid.innerHTML = photos.map((b64, i) => `<div class="relative rounded-xl overflow-hidden aspect-square cursor-pointer" onclick="openImageLightbox('${b64}', '施工前写真')"><img src="${b64}" class="w-full h-full object-cover"><button onclick="event.stopPropagation(); removeBeforePhoto(${i})" class="absolute top-1 right-1 bg-slate-900/80 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button></div>`).join('');
+    function openAddScheduleModal() {
+      editingScheduleId = null;
+      document.getElementById('scheduleModalTitle').textContent = '現場スケジュールの追加';
+      document.getElementById('saveScheduleBtn').textContent = '登録する';
+      document.getElementById('modalSchedCustomer').value = '';
+      document.getElementById('modalSchedDate').value = selectedDateStr;
+      document.getElementById('modalSchedEndDate').value = selectedDateStr;
+      document.getElementById('modalSchedTime').value = '08:30';
+      document.getElementById('modalSchedEndTime').value = '17:00';
+      document.getElementById('modalSchedPrice').value = '';
+      document.getElementById('modalSchedPostalCode').value = '';
+      document.getElementById('modalSchedLocation').value = '';
+      document.getElementById('modalSchedWarnings').value = '';
+      
+      const modal = document.getElementById('addScheduleModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function openGoogleMapNav() {
+      const item = schedules.find(s => s.id === currentDetailScheduleId);
+      if(item && (item.location || item.postalCode)) {
+        const query = `${item.postalCode ? item.postalCode + ' ' : ''}${item.location || ''}`.trim();
+        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, '_blank');
+      } else {
+        showToast('住所が入力されていません');
+      }
+    }
+
+    function openAiScanModal() { 
+      document.getElementById('dropArea').classList.remove('hidden');
+      document.getElementById('previewContainer').classList.add('hidden');
+      document.getElementById('extractionResults').classList.add('hidden');
+      document.getElementById('aiCustomer').value = '';
+      document.getElementById('aiPostalCode').value = '';
+      document.getElementById('aiLocation').value = '';
+      document.getElementById('aiPrice').value = '';
+      document.getElementById('aiDetail').value = '';
+      document.getElementById('aiDate').value = selectedDateStr;
+      document.getElementById('aiEndDate').value = selectedDateStr;
+      document.getElementById('aiTime').value = '08:30';
+      document.getElementById('aiEndTime').value = '17:00';
+      const modal = document.getElementById('aiScanModal');
+      modal.classList.remove('hidden'); 
+      modal.classList.add('flex'); 
     }
 
     async function runGeminiExtraction(base64Data, mimeType) {
@@ -1182,23 +1277,29 @@
    - 「様」「御中」「殿」がついている相手方の名前（個人名や法人名、元請会社名）。
    - 「件名」「工事名」に施主名や現場名が入っている場合（例: 「高橋様邸庭木剪定工事」なら「高橋 健一」または「高橋様邸」）を優先。
    - ※注意: 見積書を発行している自社名（旭邦園、株式会社、代表者名など）は絶対に顧客名にしないでください。
-2. location（現場住所 / 工事場所）:
+2. postalCode（郵便番号）:
+   - 現場住所または顧客住所に記載されている郵便番号を抽出（例: 「762-0012」または「7620012」）。
+   - 〒記号やハイフンはそのままで構いません。
+   - ※注意: 発行元自社の郵便番号は絶対に除外してください。
+3. location（現場住所 / 工事場所）:
    - 「工事場所」「施工場所」「現場」「納入場所」と記載されている住所を最優先で取得。
-   - 工事場所の欄がない場合は、顧客名の周辺に記載されている顧客住所（郵便番号・都道府県・市区町村・番地）を取得。
+   - 工事場所の欄がない場合は、顧客名の周辺に記載されている顧客住所（都道府県・市区町村・番地・建物名）を取得。
+   - ※郵便番号（〒〇〇〇-〇〇〇〇）は含めず、住所本文のみにしてください。
    - ※注意: 発行元（自社）の会社所在地は絶対に除外してください。
-3. estimatePrice（見積金額）:
+4. estimatePrice（見積金額）:
    - 「御見積金額」「合計金額」「税込金額」などの総額数値を抽出（カンマや円記号を除いた半角数字のみ）。
-4. startDate（開始日）/ endDate（終了日）:
+5. startDate（開始日）/ endDate（終了日）:
    - 「工期」「作業予定日」「見積日」などから YYYY-MM-DD 形式で抽出（不明な場合は空文字）。
-5. detail（作業内容）:
+6. detail（作業内容）:
    - 「件名」「工事名称」または明細の主な作業（例: 「庭木剪定・伐採・除草作業一式」など）を簡潔に。
 
 見つからない項目は空文字 "" にしてください。`;
 
-      const userQuery = `この見積書画像から「顧客名（宛先）」「現場住所（工事場所）」「見積価格（税込合計）」「工期/日付」「工事内容」を抽出し、以下のJSONフォーマットのみで回答してください。
+      const userQuery = `この見積書画像から「顧客名（宛先）」「郵便番号」「現場住所（工事場所）」「見積価格（税込合計）」「工期/日付」「工事内容」を抽出し、以下のJSONフォーマットのみで回答してください。
 {
   "customer": "顧客名または案件名",
-  "location": "工事場所または顧客住所",
+  "postalCode": "762-0012",
+  "location": "香川県坂出市〇〇町1-2-3",
   "estimatePrice": "150000",
   "startDate": "2026-09-25",
   "endDate": "2026-09-25",
@@ -1242,6 +1343,11 @@
 
         // 抽出結果の自動反映
         if (p.customer) document.getElementById('aiCustomer').value = p.customer.trim();
+        if (p.postalCode) {
+          let zip = p.postalCode.trim();
+          if (!zip.startsWith('〒') && zip.length > 0) zip = '〒' + zip;
+          document.getElementById('aiPostalCode').value = zip;
+        }
         if (p.location) document.getElementById('aiLocation').value = p.location.trim();
         if (p.estimatePrice) document.getElementById('aiPrice').value = String(p.estimatePrice).replace(/[^0-9]/g, '');
         if (p.detail) document.getElementById('aiDetail').value = p.detail.trim();
@@ -1252,7 +1358,7 @@
 
         document.getElementById('aiLoadingOverlay').classList.add('hidden');
         document.getElementById('extractionResults').classList.remove('hidden');
-        showToast('✨ AIが見積書の顧客名・住所・金額を抽出しました！');
+        showToast('✨ AIが見積書の顧客名・郵便番号・住所・金額を抽出しました！');
       } catch (err) {
         console.error("見積書AI読取エラー:", err);
         showToast('AI読取に一部失敗しました。内容を手動で入力・確認してください。');
