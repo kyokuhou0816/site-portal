@@ -44,7 +44,6 @@
     .pb-safe {
       padding-bottom: env(safe-area-inset-bottom, 1.5rem);
     }
-    /* iPhoneのステータスバー（時計など）に被らないようにする余白 */
     .pt-safe-header {
       padding-top: max(env(safe-area-inset-top), 0.75rem);
     }
@@ -56,15 +55,32 @@
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs pt-safe-header">
     <div class="max-w-md mx-auto px-4 pb-2">
       <div class="flex items-center justify-between mt-2">
-        <button onclick="toggleOptionsMenu()" class="p-2 -ml-2 text-slate-600 hover:text-slate-900 rounded-full active:bg-slate-100 transition-colors" title="連携・設定メニュー">
-          <i class="fa-solid fa-gear text-lg text-emerald-600"></i>
-        </button>
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black text-sm shadow-xs">
+            <i class="fa-solid fa-helmet-safety"></i>
+          </div>
+          <div>
+            <h1 class="text-sm font-extrabold text-slate-900 leading-none">現場ポータル</h1>
+            <p class="text-[10px] font-bold text-slate-400 mt-0.5">日程・見積AI・日報管理</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-1">
+          <button onclick="togglePwaInstallGuide()" class="p-2 text-slate-500 hover:text-slate-800 rounded-full active:bg-slate-100 transition-colors" title="アプリ保存方法">
+            <i class="fa-solid fa-mobile-screen-button text-base text-slate-600"></i>
+          </button>
+          <button onclick="toggleGasGuideModal()" class="p-2 text-slate-500 hover:text-slate-800 rounded-full active:bg-slate-100 transition-colors" title="スプシ連携手順">
+            <i class="fa-solid fa-file-excel text-base text-emerald-600"></i>
+          </button>
+          <button onclick="toggleOptionsMenu()" class="p-2 text-slate-500 hover:text-slate-800 rounded-full active:bg-slate-100 transition-colors" title="システム設定">
+            <i class="fa-solid fa-gear text-base text-indigo-600"></i>
+          </button>
+        </div>
       </div>
 
       <!-- 年月セレクター & アクションボタン -->
-      <div class="flex items-center justify-between mt-2">
+      <div class="flex items-center justify-between mt-2.5">
         <div>
-          <h2 id="currentYearMonthDisplay" class="text-2xl font-extrabold text-slate-900 tracking-tight leading-tight">2026年 8月</h2>
+          <h2 id="currentYearMonthDisplay" class="text-2xl font-extrabold text-slate-900 tracking-tight leading-tight">2026年 9月</h2>
         </div>
 
         <div class="flex items-center space-x-1.5">
@@ -93,13 +109,10 @@
           <span class="w-2 h-2 rounded-full bg-white mr-1.5"></span>全班表示
         </button>
         <button id="tab-yoshii" onclick="setTeamFilter('yoshii')" class="flex items-center px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shadow-xs transition-all bg-white text-slate-700 border border-slate-200">
-          <span class="w-2 h-2 rounded-full bg-amber-500 mr-1.5"></span>A【吉井】
+          <span class="w-2 h-2 rounded-full bg-amber-500 mr-1.5"></span>吉井【熊野・高川】
         </button>
-        <button id="tab-kumano" onclick="setTeamFilter('kumano')" class="flex items-center px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shadow-xs transition-all bg-white text-slate-700 border border-slate-200">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span>B【熊野】
-        </button>
-        <button id="tab-hisamoto" onclick="setTeamFilter('hisamoto')" class="flex items-center px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shadow-xs transition-all bg-white text-slate-700 border border-slate-200">
-          <span class="w-2 h-2 rounded-full bg-purple-600 mr-1.5"></span>C【久本】
+        <button id="tab-fujii" onclick="setTeamFilter('fujii')" class="flex items-center px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shadow-xs transition-all bg-white text-slate-700 border border-slate-200">
+          <span class="w-2 h-2 rounded-full bg-indigo-600 mr-1.5"></span>藤井【久本】
         </button>
         <button id="tab-external" onclick="setTeamFilter('external')" class="flex items-center px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shadow-xs transition-all bg-white text-slate-700 border border-slate-200">
           <span class="w-2 h-2 rounded-full bg-slate-600 mr-1.5"></span>外注
@@ -186,11 +199,10 @@
 
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1.5">報告班 <span class="text-rose-500">*</span></label>
-          <div class="grid grid-cols-2 gap-2 text-xs">
-            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold"><input type="radio" name="formReportTeam" value="yoshii" class="text-amber-500 mr-2" checked><span>A【吉井】</span></label>
-            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold"><input type="radio" name="formReportTeam" value="kumano" class="text-emerald-500 mr-2"><span>B【熊野】</span></label>
-            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold"><input type="radio" name="formReportTeam" value="hisamoto" class="text-purple-500 mr-2"><span>C【久本】</span></label>
-            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold"><input type="radio" name="formReportTeam" value="external" class="text-slate-500 mr-2"><span>外注</span></label>
+          <div class="grid grid-cols-3 gap-2 text-xs">
+            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold"><input type="radio" name="formReportTeam" value="yoshii" class="text-amber-500 mr-2" checked><span class="truncate">吉井【熊野・高川】</span></label>
+            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold"><input type="radio" name="formReportTeam" value="fujii" class="text-indigo-600 mr-2"><span class="truncate">藤井【久本】</span></label>
+            <label class="flex items-center p-2.5 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 font-bold"><input type="radio" name="formReportTeam" value="external" class="text-slate-500 mr-2"><span class="truncate">外注</span></label>
           </div>
         </div>
         <div>
@@ -221,11 +233,11 @@
               </div>
             </div>
             <div class="bg-white p-2 rounded-xl border border-slate-200 shadow-2xs">
-              <span class="text-[11px] font-bold text-slate-800 block mb-1">久本</span>
+              <span class="text-[11px] font-bold text-slate-800 block mb-1">藤井</span>
               <div class="flex space-x-1.5 text-xs">
-                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-purple-100 has-[:checked]:bg-purple-600 has-[:checked]:text-white"><input type="radio" name="manpower_hisamoto" value="1.0" class="sr-only"><span>1.0</span></label>
-                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-purple-100 has-[:checked]:bg-purple-600 has-[:checked]:text-white"><input type="radio" name="manpower_hisamoto" value="0.5" class="sr-only"><span>0.5</span></label>
-                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-slate-200 has-[:checked]:bg-slate-700 has-[:checked]:text-white"><input type="radio" name="manpower_hisamoto" value="0" checked class="sr-only"><span>なし</span></label>
+                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-indigo-100 has-[:checked]:bg-indigo-600 has-[:checked]:text-white"><input type="radio" name="manpower_fujii" value="1.0" class="sr-only"><span>1.0</span></label>
+                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-indigo-100 has-[:checked]:bg-indigo-600 has-[:checked]:text-white"><input type="radio" name="manpower_fujii" value="0.5" class="sr-only"><span>0.5</span></label>
+                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-slate-200 has-[:checked]:bg-slate-700 has-[:checked]:text-white"><input type="radio" name="manpower_fujii" value="0" checked class="sr-only"><span>なし</span></label>
               </div>
             </div>
             <div class="bg-white p-2 rounded-xl border border-slate-200 shadow-2xs">
@@ -237,10 +249,18 @@
               </div>
             </div>
             <div class="bg-white p-2 rounded-xl border border-slate-200 shadow-2xs">
+              <span class="text-[11px] font-bold text-slate-800 block mb-1">久本</span>
+              <div class="flex space-x-1.5 text-xs">
+                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-purple-100 has-[:checked]:bg-purple-600 has-[:checked]:text-white"><input type="radio" name="manpower_hisamoto" value="1.0" class="sr-only"><span>1.0</span></label>
+                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-purple-100 has-[:checked]:bg-purple-600 has-[:checked]:text-white"><input type="radio" name="manpower_hisamoto" value="0.5" class="sr-only"><span>0.5</span></label>
+                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-slate-200 has-[:checked]:bg-slate-700 has-[:checked]:text-white"><input type="radio" name="manpower_hisamoto" value="0" checked class="sr-only"><span>なし</span></label>
+              </div>
+            </div>
+            <div class="bg-white p-2 rounded-xl border border-slate-200 shadow-2xs col-span-2">
               <span class="text-[11px] font-bold text-slate-800 block mb-1">高川</span>
               <div class="flex space-x-1.5 text-xs">
-                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-indigo-100 has-[:checked]:bg-indigo-600 has-[:checked]:text-white"><input type="radio" name="manpower_takagawa" value="1.0" class="sr-only"><span>1.0</span></label>
-                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-indigo-100 has-[:checked]:bg-indigo-600 has-[:checked]:text-white"><input type="radio" name="manpower_takagawa" value="0.5" class="sr-only"><span>0.5</span></label>
+                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-teal-100 has-[:checked]:bg-teal-600 has-[:checked]:text-white"><input type="radio" name="manpower_takagawa" value="1.0" class="sr-only"><span>1.0</span></label>
+                <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-teal-100 has-[:checked]:bg-teal-600 has-[:checked]:text-white"><input type="radio" name="manpower_takagawa" value="0.5" class="sr-only"><span>0.5</span></label>
                 <label class="flex-1 text-center py-1.5 rounded-lg cursor-pointer font-bold text-[11px] bg-slate-100 hover:bg-slate-200 has-[:checked]:bg-slate-700 has-[:checked]:text-white"><input type="radio" name="manpower_takagawa" value="0" checked class="sr-only"><span>なし</span></label>
               </div>
             </div>
@@ -393,11 +413,11 @@
         </div>
         <button onclick="closeAiScanModal()" class="p-1 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
-      <p class="text-xs text-slate-500 mb-4">写真やPDFから顧客名・作業日時・現場住所・見積金額をAIが自動抽出します。</p>
+      <p class="text-xs text-slate-500 mb-4">写真から顧客名・作業日時・現場住所・見積金額をAIが自動抽出します。</p>
       <div id="dropArea" class="border-2 border-dashed border-emerald-300 bg-emerald-50/50 rounded-2xl p-6 text-center cursor-pointer hover:bg-emerald-50 transition-colors" onclick="triggerFileInput()">
         <input type="file" id="estimateFileInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
         <i class="fa-solid fa-cloud-arrow-up text-3xl text-emerald-500 mb-2"></i>
-        <p class="text-xs font-bold text-slate-800">見積書を撮影・画像を選択</p>
+        <p class="text-xs font-bold text-slate-800">見積書を撮影・画像を選択またはドラッグ＆ドロップ</p>
       </div>
       <div id="previewContainer" class="hidden mt-3 space-y-3">
         <div class="relative rounded-xl overflow-hidden border border-slate-200 max-h-48 bg-slate-100 flex items-center justify-center group cursor-pointer" onclick="openImageLightbox(document.getElementById('previewImage').src, 'アップロード見積書')">
@@ -408,7 +428,7 @@
         </div>
         <div id="extractionResults" class="space-y-2.5 pt-2 hidden">
           <div class="p-2.5 bg-emerald-50 rounded-xl border border-emerald-200 text-xs font-bold text-emerald-800"><i class="fa-solid fa-circle-check mr-1.5"></i> AI抽出完了！内容を確認して登録してください</div>
-          <div><label class="block text-[10px] font-bold text-slate-500">割当班</label><select id="aiTeam" class="w-full text-xs border border-slate-200 rounded-lg p-2 bg-slate-50 font-bold"><option value="yoshii">A【吉井】</option><option value="kumano">B【熊野】</option><option value="hisamoto">C【久本】</option><option value="external">外注</option></select></div>
+          <div><label class="block text-[10px] font-bold text-slate-500">割当班</label><select id="aiTeam" class="w-full text-xs border border-slate-200 rounded-lg p-2 bg-slate-50 font-bold"><option value="yoshii">吉井【熊野・高川】</option><option value="fujii">藤井【久本】</option><option value="external">外注</option></select></div>
           <div><label class="block text-[10px] font-bold text-slate-500">顧客名 / 案件名</label><input id="aiCustomer" type="text" class="w-full text-xs border border-slate-200 rounded-lg p-2 bg-slate-50 font-bold text-slate-800"></div>
           <div class="grid grid-cols-2 gap-2">
             <div><label class="block text-[10px] font-bold text-slate-500">開始日</label><input id="aiDate" type="date" class="w-full text-xs border border-slate-200 rounded-lg p-2 bg-slate-50 font-bold"></div>
@@ -438,7 +458,7 @@
         <div>
           <label class="block text-[10px] font-bold text-slate-500 mb-1">担当班</label>
           <select id="modalSchedTeam" class="w-full text-xs border border-slate-200 rounded-xl p-2.5 bg-slate-50 font-bold">
-            <option value="yoshii">A【吉井】</option><option value="kumano">B【熊野】</option><option value="hisamoto">C【久本】</option><option value="external">外注</option>
+            <option value="yoshii">吉井【熊野・高川】</option><option value="fujii">藤井【久本】</option><option value="external">外注</option>
           </select>
         </div>
         <div>
@@ -464,7 +484,7 @@
     </div>
   </div>
 
-  <!-- その他のモーダル群 -->
+  <!-- ================= 設定メニュー モーダル ================= -->
   <div id="optionsMenuModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border border-slate-100 space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -472,22 +492,83 @@
         <button onclick="toggleOptionsMenu()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="p-3 bg-emerald-50/80 border border-emerald-200 rounded-2xl space-y-2">
-        <div class="flex items-center justify-between"><label class="block text-xs font-extrabold text-emerald-900"><i class="fa-solid fa-file-excel text-emerald-600 mr-1.5 text-sm"></i>スプシ連携 URL</label></div>
-        <input id="gasWebhookUrlInput" type="url" class="w-full text-[10px] border border-emerald-300 rounded-xl p-2 bg-white font-mono" onchange="saveGasWebhookUrl(this.value)">
+        <div class="flex items-center justify-between">
+          <label class="block text-xs font-extrabold text-emerald-900"><i class="fa-solid fa-file-excel text-emerald-600 mr-1.5 text-sm"></i>スプシ連携 GAS URL</label>
+        </div>
+        <input id="gasWebhookUrlInput" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full text-[10px] border border-emerald-300 rounded-xl p-2 bg-white font-mono" onchange="saveGasWebhookUrl(this.value)">
+      </div>
+      <div class="p-3 bg-purple-50/80 border border-purple-200 rounded-2xl space-y-2">
+        <div class="flex items-center justify-between">
+          <label class="block text-xs font-extrabold text-purple-900"><i class="fa-solid fa-key text-purple-600 mr-1.5 text-sm"></i>Gemini APIキー</label>
+        </div>
+        <input id="customApiKeyInput" type="password" placeholder="AI API Keyを入力" class="w-full text-[10px] border border-purple-300 rounded-xl p-2 bg-white font-mono" onchange="saveCustomApiKey(this.value)">
+        <p class="text-[9px] text-purple-600 font-medium">※未入力の場合は組み込みキーを使用します</p>
       </div>
       <div class="space-y-2 pt-2 border-t border-slate-100">
-        <button onclick="exportDataToFile()" class="w-full py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center justify-center space-x-2"><i class="fa-solid fa-download"></i><span>バックアップ保存</span></button>
-        <button onclick="triggerImportData()" class="w-full py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center justify-center space-x-2"><i class="fa-solid fa-upload"></i><span>復元</span></button>
+        <button onclick="exportDataToFile()" class="w-full py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center justify-center space-x-2"><i class="fa-solid fa-download"></i><span>バックアップ保存 (JSON)</span></button>
+        <button onclick="triggerImportData()" class="w-full py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center justify-center space-x-2"><i class="fa-solid fa-upload"></i><span>バックアップから復元</span></button>
         <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="handleDataImport(event)">
       </div>
     </div>
   </div>
 
+  <!-- ================= PWA追加ガイド モーダル ================= -->
+  <div id="pwaInstallGuideModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border border-slate-100 space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <h4 class="font-bold text-sm text-slate-900 flex items-center"><i class="fa-solid fa-mobile-screen-button text-emerald-600 mr-2"></i>ホーム画面への追加</h4>
+        <button onclick="togglePwaInstallGuide()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <div class="text-xs text-slate-600 space-y-3 leading-relaxed">
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+          <strong class="text-slate-800 block text-xs">【iPhone (Safari) の場合】</strong>
+          <p>1. 画面下の <i class="fa-solid fa-arrow-up-from-bracket text-blue-500"></i> (共有) ボタンをタップ</p>
+          <p>2. メニュー内の「<strong>ホーム画面に追加</strong>」を選択</p>
+          <p>3. 右上の「追加」を押すとアプリとして全画面起動できます。</p>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+          <strong class="text-slate-800 block text-xs">【Android (Chrome) の場合】</strong>
+          <p>1. 右上の <i class="fa-solid fa-ellipsis-vertical text-slate-700"></i> (メニュー) をタップ</p>
+          <p>2. 「<strong>アプリをインストール</strong>」または「<strong>ホーム画面に追加</strong>」を選択</p>
+        </div>
+      </div>
+      <button onclick="togglePwaInstallGuide()" class="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold">閉じる</button>
+    </div>
+  </div>
+
+  <!-- ================= スプレッドシート連携ガイド モーダル ================= -->
+  <div id="gasGuideModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl border border-slate-100 space-y-4 max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <h4 class="font-bold text-sm text-slate-900 flex items-center"><i class="fa-solid fa-file-excel text-emerald-600 mr-2"></i>スプシ自動記録の設定</h4>
+        <button onclick="toggleGasGuideModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <div class="text-xs text-slate-600 space-y-3 leading-relaxed">
+        <p>Googleスプレッドシートの「拡張機能」→「Apps Script」に以下のスクリプトを貼り付けてウェブアプリとして公開します。</p>
+        <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl font-mono text-[10px] overflow-x-auto">
+          function doPost(e) {<br>
+          &nbsp;&nbsp;var d = JSON.parse(e.postData.contents);<br>
+          &nbsp;&nbsp;var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();<br>
+          &nbsp;&nbsp;sheet.appendRow([<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;new Date(), d.workDate, d.teamName, d.siteName, d.estimatePrice,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;d.manpower.yoshii, d.manpower.hisamoto, d.manpower.kumano, d.manpower.takagawa,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;d.wasteAmount, d.outsourceFee, d.workStatus, d.progressRate, d.memo<br>
+          &nbsp;&nbsp;]);<br>
+          &nbsp;&nbsp;return ContentService.createTextOutput("OK");<br>
+          }
+        </div>
+        <p class="text-[11px]">公開時のアクセス権限を「<strong>全員 (Anyone)</strong>」にして発行されたウェブアプリURLを設定メニューに貼り付けてください。</p>
+      </div>
+      <button onclick="toggleGasGuideModal()" class="w-full py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold">確認完了</button>
+    </div>
+  </div>
+
+  <!-- ================= 画像拡大 モーダル ================= -->
   <div id="imageLightboxModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex-col items-center justify-between p-3 sm:p-6" onclick="closeImageLightbox(event)">
     <div class="w-full max-w-2xl flex items-center justify-between text-white pb-2" onclick="event.stopPropagation()">
       <span id="lightboxTitle" class="text-xs sm:text-sm font-extrabold truncate">画像拡大</span>
       <div class="flex items-center space-x-2">
-        <button onclick="closeImageLightbox()" class="p-2 bg-white/20 text-white rounded-full text-xs w-8 h-8"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <button onclick="closeImageLightbox()" class="p-2 bg-white/20 text-white rounded-full text-xs w-8 h-8 flex items-center justify-center"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
     </div>
     <div class="flex-1 w-full max-w-2xl flex items-center justify-center overflow-hidden p-2" onclick="event.stopPropagation()">
@@ -495,14 +576,17 @@
     </div>
   </div>
 
+  <!-- ================= トースト通知 ================= -->
   <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white text-xs px-4 py-2.5 rounded-full shadow-2xl flex items-center space-x-2 transform transition-all translate-y-20 opacity-0 pointer-events-none z-50 whitespace-nowrap">
-    <i class="fa-solid fa-check-circle text-emerald-400"></i>
+    <i class="fa-solid fa-circle-check text-emerald-400"></i>
     <span id="toastText">保存完了</span>
   </div>
 
   <script>
-    // ================= アプリケーション設定 (APIキーなど) =================
-    const apiKey = "AQ.Ab8RN6KD9yzqnNql3PaPvCxZ4AAQKL1yDfZ_hIW26dprNKR24g";
+    // ================= アプリケーション設定 =================
+    const DEFAULT_API_KEY = "AQ.Ab8RN6KD9yzqnNql3PaPvCxZ4AAQKL1yDfZ_hIW26dprNKR24g";
+    let activeApiKey = localStorage.getItem('CUSTOM_GEMINI_KEY') || DEFAULT_API_KEY;
+
     const DEFAULT_GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzLG2r2TkJv1Yv2gp54q2Vp2n9OW78TdtISGq2kEsGcjV7m0w7SAIX5a9mHg1pWRiZJ2g/exec";
     let gasWebhookUrl = localStorage.getItem('GAS_WEBHOOK_URL') || DEFAULT_GAS_WEBHOOK_URL;
     
@@ -525,7 +609,7 @@
       db = firebase.firestore();
       console.log("Firebase クラウド同期が有効になりました");
     } catch(e) {
-      console.warn("Firebase初期化エラー (オフライン動作になります):", e);
+      console.warn("Firebase初期化エラー (ローカル動作になります):", e);
     }
 
     // --- 状態変数 ---
@@ -545,10 +629,12 @@
     let weeklyWeather = {}; 
 
     const TEAM_INFO = {
-      yoshii: { id: 'yoshii', name: 'A【吉井】', color: 'bg-amber-500', textCol: 'text-amber-700', bgLight: 'bg-amber-50' },
-      kumano: { id: 'kumano', name: 'B【熊野】', color: 'bg-emerald-500', textCol: 'text-emerald-700', bgLight: 'bg-emerald-50' },
-      hisamoto: { id: 'hisamoto', name: 'C【久本】', color: 'bg-purple-600', textCol: 'text-purple-700', bgLight: 'bg-purple-50' },
-      external: { id: 'external', name: '外注', color: 'bg-slate-600', textCol: 'text-slate-700', bgLight: 'bg-slate-100' }
+      yoshii: { id: 'yoshii', name: '吉井【熊野・高川】', color: 'bg-amber-500', textCol: 'text-amber-700', bgLight: 'bg-amber-50' },
+      fujii: { id: 'fujii', name: '藤井【久本】', color: 'bg-indigo-600', textCol: 'text-indigo-700', bgLight: 'bg-indigo-50' },
+      external: { id: 'external', name: '外注', color: 'bg-slate-600', textCol: 'text-slate-700', bgLight: 'bg-slate-100' },
+      // 旧データの互換性用
+      kumano: { id: 'yoshii', name: '吉井【熊野・高川】', color: 'bg-amber-500', textCol: 'text-amber-700', bgLight: 'bg-amber-50' },
+      hisamoto: { id: 'fujii', name: '藤井【久本】', color: 'bg-indigo-600', textCol: 'text-indigo-700', bgLight: 'bg-indigo-50' }
     };
 
     // --- ユーティリティ関数 ---
@@ -614,29 +700,8 @@
       });
     }
 
-    async function fetchWithRetry(url, options = {}, retries = 5, backoff = 1000) {
-      try {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-          if (response.status === 429 && retries > 0) {
-            await new Promise(r => setTimeout(r, backoff));
-            return fetchWithRetry(url, options, retries - 1, backoff * 2);
-          }
-          throw new Error(`HTTP Error: ${response.status}`);
-        }
-        return response;
-      } catch (err) {
-        if (retries > 0) {
-          await new Promise(r => setTimeout(r, backoff));
-          return fetchWithRetry(url, options, retries - 1, backoff * 2);
-        }
-        throw err;
-      }
-    }
-
     // --- クラウド同期 (Firestore) & ローカル保存ロジック ---
     function loadDataFromStorage() {
-      // 1. ローカル読込
       try {
         const storedSchedules = localStorage.getItem('SCHEDULES_DATA');
         const storedReports = localStorage.getItem('REPORTS_DATA');
@@ -644,9 +709,7 @@
         if (storedReports) dailyReports = JSON.parse(storedReports);
       } catch (e) { console.warn("ローカル読込エラー"); }
 
-      // 2. クラウド同期
       if (db) {
-        // スケジュール同期
         db.collection("schedules").onSnapshot(snapshot => {
           if (snapshot.empty && schedules.length > 0) {
              schedules.forEach(s => db.collection("schedules").doc(s.id).set(s));
@@ -667,9 +730,8 @@
                }
              }
           }
-        }, err => console.warn("同期エラー:", err));
+        }, err => console.warn("スケジュール同期エラー:", err));
 
-        // 日報同期
         db.collection("reports").orderBy("createdAt", "desc").onSnapshot(snapshot => {
           if (snapshot.empty && dailyReports.length > 0) {
              dailyReports.forEach(r => db.collection("reports").doc(r.id).set({...r, createdAt: Date.now()}));
@@ -678,7 +740,7 @@
              localStorage.setItem('REPORTS_DATA', JSON.stringify(dailyReports));
              renderReportList();
           }
-        }, err => console.warn("同期エラー:", err));
+        }, err => console.warn("日報同期エラー:", err));
       }
     }
 
@@ -694,13 +756,43 @@
       loadDataFromStorage();
       const input = document.getElementById('gasWebhookUrlInput');
       if (input) input.value = gasWebhookUrl;
+      const keyInput = document.getElementById('customApiKeyInput');
+      if (keyInput) keyInput.value = localStorage.getItem('CUSTOM_GEMINI_KEY') || '';
       updateGasSyncBadge();
       document.getElementById('formWorkDate').value = selectedDateStr;
       document.getElementById('modalSchedDate').value = selectedDateStr;
       document.getElementById('modalSchedEndDate').value = selectedDateStr;
+      
+      initDragAndDrop();
       renderAll();
       fetchKagawaWeather(); 
     });
+
+    function initDragAndDrop() {
+      const dropArea = document.getElementById('dropArea');
+      if (!dropArea) return;
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropArea.classList.add('bg-emerald-100');
+        }, false);
+      });
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropArea.classList.remove('bg-emerald-100');
+        }, false);
+      });
+      dropArea.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files.length > 0) {
+          processEstimateFile(files[0]);
+        }
+      }, false);
+    }
 
     function renderAll() {
       document.getElementById('currentYearMonthDisplay').textContent = `${currentYear}年 ${currentMonth + 1}月`;
@@ -732,7 +824,7 @@
     }
 
     function updateFilterTabs() {
-      ['all', 'yoshii', 'kumano', 'hisamoto', 'external'].forEach(t => {
+      ['all', 'yoshii', 'fujii', 'external'].forEach(t => {
         const btn = document.getElementById(`tab-${t}`);
         if (!btn) return;
         btn.className = (t === currentTeamFilter) 
@@ -838,7 +930,7 @@
       });
     }
 
-    // --- データ保存・削除アクション (Firestore連動対応) ---
+    // --- データ保存・削除アクション ---
     function saveManualSchedule() {
       const customer = document.getElementById('modalSchedCustomer').value.trim();
       const date = document.getElementById('modalSchedDate').value;
@@ -855,8 +947,8 @@
         location: document.getElementById('modalSchedLocation').value.trim(),
         estimatePrice: document.getElementById('modalSchedPrice').value.trim().replace(/[^0-9]/g, ''),
         warnings: document.getElementById('modalSchedWarnings').value.trim(),
-        detail: editingScheduleId ? schedules.find(s=>s.id===editingScheduleId)?.detail : '手動登録現場',
-        beforePhotos: editingScheduleId ? schedules.find(s=>s.id===editingScheduleId)?.beforePhotos || [] : []
+        detail: editingScheduleId ? (schedules.find(s=>s.id===editingScheduleId)?.detail || '手動登録現場') : '手動登録現場',
+        beforePhotos: editingScheduleId ? (schedules.find(s=>s.id===editingScheduleId)?.beforePhotos || []) : []
       };
 
       if (db) {
@@ -904,6 +996,7 @@
     }
 
     function deleteScheduleItem(id) {
+      if (!confirm('この予定を削除しますか？')) return;
       if (db) {
          db.collection("schedules").doc(id).delete();
          showToast('予定を削除し同期しました');
@@ -963,15 +1056,22 @@
       const workDate = document.getElementById('formWorkDate').value;
       if (!siteName || !workDate) { showToast('現場名と作業日を入力してください'); return; }
 
+      const selectedTeam = document.querySelector('input[name="formReportTeam"]:checked')?.value || 'yoshii';
       const reportData = {
         id: editingReportId || ('rep_' + Date.now()),
         createdAt: editingReportId ? (dailyReports.find(r=>r.id===editingReportId)?.createdAt || Date.now()) : Date.now(),
-        teamId: document.querySelector('input[name="formReportTeam"]:checked')?.value || 'kumano',
-        teamName: TEAM_INFO[document.querySelector('input[name="formReportTeam"]:checked')?.value || 'kumano'].name,
+        teamId: selectedTeam,
+        teamName: TEAM_INFO[selectedTeam]?.name || '吉井【熊野・高川】',
         workDate: workDate,
         siteName: siteName,
         estimatePrice: document.getElementById('formEstimatePrice').value.trim(),
-        manpower: { yoshii: getManpower('yoshii'), hisamoto: getManpower('hisamoto'), kumano: getManpower('kumano'), takagawa: getManpower('takagawa') },
+        manpower: { 
+          yoshii: getManpower('yoshii'), 
+          fujii: getManpower('fujii'),
+          kumano: getManpower('kumano'), 
+          hisamoto: getManpower('hisamoto'), 
+          takagawa: getManpower('takagawa') 
+        },
         wasteAmount: document.getElementById('formWasteAmount').value.trim(),
         outsourceFee: document.getElementById('formOutsourceFee').value.trim(),
         outsourceFeeSub: document.getElementById('formOutsourceFeeSub').value.trim(),
@@ -995,15 +1095,23 @@
 
       // GASへの送信
       if (gasWebhookUrl) {
-        document.getElementById('submitReportBtn').disabled = true;
-        try { await fetch(gasWebhookUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify(reportData) }); }
-        catch (err) { console.warn('GAS送信エラー'); }
-        document.getElementById('submitReportBtn').disabled = false;
+        const btn = document.getElementById('submitReportBtn');
+        btn.disabled = true;
+        try { 
+          await fetch(gasWebhookUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify(reportData) }); 
+          showToast('スプレッドシートへ連動送信完了！');
+        }
+        catch (err) { 
+          console.warn('GAS送信エラー:', err); 
+          showToast('スプシ送信に失敗しました (ローカル保存済)');
+        }
+        btn.disabled = false;
       }
       resetReportForm();
     }
 
     function deleteReportItem(reportId) {
+      if (!confirm('この日報を削除しますか？')) return;
       if (db) {
          db.collection("reports").doc(reportId).delete(); showToast('日報を削除し同期しました');
       } else {
@@ -1017,68 +1125,119 @@
       currentDetailScheduleId = id;
       const item = schedules.find(s => s.id === id);
       if (!item) return;
-      document.getElementById('detailTeamBadge').textContent = TEAM_INFO[item.teamId]?.name;
+      document.getElementById('detailTeamBadge').textContent = TEAM_INFO[item.teamId]?.name || '未設定';
       document.getElementById('detailCustomerTitle').textContent = item.customer;
-      document.getElementById('detailDateDisplay').textContent = item.date;
-      document.getElementById('detailPriceDisplay').textContent = item.estimatePrice ? `¥${item.estimatePrice}` : '未設定';
-      document.getElementById('detailLocationText').textContent = item.location || '未設定';
+      document.getElementById('detailDateDisplay').textContent = item.date + (item.endDate && item.endDate !== item.date ? ` 〜 ${item.endDate}` : '');
+      document.getElementById('detailTimeDisplay').textContent = `${item.time || '08:30'} 〜 ${item.endTime || '17:00'}`;
+      document.getElementById('detailPriceDisplay').textContent = item.estimatePrice ? `¥${Number(item.estimatePrice).toLocaleString()}` : '未設定';
+      document.getElementById('detailLocationText').textContent = item.location || '住所登録なし';
       document.getElementById('detailWarningsInput').value = item.warnings || '';
       renderBeforePhotoGrid(item.beforePhotos || []);
-      document.getElementById('scheduleDetailModal').classList.remove('hidden');
-      document.getElementById('scheduleDetailModal').classList.add('flex');
+      
+      const modal = document.getElementById('scheduleDetailModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
 
     function closeScheduleDetailModal() {
-      document.getElementById('scheduleDetailModal').classList.add('hidden');
-      document.getElementById('scheduleDetailModal').classList.remove('flex');
+      const modal = document.getElementById('scheduleDetailModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
       currentDetailScheduleId = null;
     }
 
     function renderBeforePhotoGrid(photos) {
       const grid = document.getElementById('beforePhotoGrid');
-      if (!photos.length) { grid.innerHTML = `<div class="col-span-3 text-center py-4 text-[11px] text-slate-400">施工前写真はありません</div>`; return; }
-      grid.innerHTML = photos.map((b64, i) => `<div class="relative rounded-xl overflow-hidden aspect-square cursor-pointer" onclick="openImageLightbox('${b64}')"><img src="${b64}" class="w-full h-full object-cover"><button onclick="event.stopPropagation(); removeBeforePhoto(${i})" class="absolute top-1 right-1 bg-slate-900/80 text-white rounded-full w-5 h-5 text-[10px]"><i class="fa-solid fa-xmark"></i></button></div>`).join('');
+      if (!photos || !photos.length) { grid.innerHTML = `<div class="col-span-3 text-center py-4 text-[11px] text-slate-400">施工前写真はありません</div>`; return; }
+      grid.innerHTML = photos.map((b64, i) => `<div class="relative rounded-xl overflow-hidden aspect-square cursor-pointer" onclick="openImageLightbox('${b64}', '施工前写真')"><img src="${b64}" class="w-full h-full object-cover"><button onclick="event.stopPropagation(); removeBeforePhoto(${i})" class="absolute top-1 right-1 bg-slate-900/80 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button></div>`).join('');
     }
 
     async function runGeminiExtraction(base64Data, mimeType) {
-      const prompt = `あなたは建築・造園・電気工事の見積書解析プロです。添付画像から以下の情報を正確に読み取りJSONで出力してください。\n{"customer": "植村 祥子様","time": "08:30","estimatePrice": "44000","location": "香川県坂出市〇〇","detail": "センター斑入りトベラ植栽"}`;
+      const prompt = `あなたは建築・造園・電気工事の見積書解析プロです。添付画像から以下の情報を正確に読み取りJSONで出力してください。見つからない項目は空文字にしてください。\n{"customer": "顧客名","time": "08:30","estimatePrice": "金額(数値のみ)","location": "住所","detail": "作業詳細"}`;
       try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
-          method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }, { inlineData: { mimeType: "image/jpeg", data: base64Data } }] }], generationConfig: { responseMimeType: "application/json" } })
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${activeApiKey}`, {
+          method: "POST", 
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            contents: [{ 
+              role: "user", 
+              parts: [{ text: prompt }, { inlineData: { mimeType: mimeType || "image/jpeg", data: base64Data } }] 
+            }], 
+            generationConfig: { responseMimeType: "application/json" } 
+          })
         });
         const data = await res.json();
         const p = JSON.parse(data.candidates[0].content.parts[0].text);
-        document.getElementById('aiCustomer').value = p.customer || ''; document.getElementById('aiPrice').value = p.estimatePrice || ''; document.getElementById('aiLocation').value = p.location || ''; document.getElementById('aiDetail').value = p.detail || '';
-        document.getElementById('aiLoadingOverlay').classList.add('hidden'); document.getElementById('extractionResults').classList.remove('hidden');
-        showToast('✨ AI解析完了！');
-      } catch (err) { showToast('読取失敗。手動入力してください。'); document.getElementById('aiLoadingOverlay').classList.add('hidden'); document.getElementById('extractionResults').classList.remove('hidden'); }
+        document.getElementById('aiCustomer').value = p.customer || ''; 
+        document.getElementById('aiPrice').value = p.estimatePrice || ''; 
+        document.getElementById('aiLocation').value = p.location || ''; 
+        document.getElementById('aiDetail').value = p.detail || '';
+        document.getElementById('aiLoadingOverlay').classList.add('hidden'); 
+        document.getElementById('extractionResults').classList.remove('hidden');
+        showToast('✨ AI抽出完了！');
+      } catch (err) { 
+        console.error(err);
+        showToast('AI読取に失敗しました。手動で入力してください。'); 
+        document.getElementById('aiLoadingOverlay').classList.add('hidden'); 
+        document.getElementById('extractionResults').classList.remove('hidden'); 
+      }
     }
 
     async function runAiPhotoRiskAnalysis() {
       const item = schedules.find(s => s.id === currentDetailScheduleId);
       if (!item || !item.beforePhotos?.length) { showToast('写真を1枚以上追加してください'); return; }
-      const resBox = document.getElementById('aiDetailRiskResult'); resBox.classList.remove('hidden'); resBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> AI分析中...';
+      const resBox = document.getElementById('aiDetailRiskResult'); 
+      resBox.classList.remove('hidden'); 
+      resBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> AIが施工リスクを診断中...';
       try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: `現場写真です。事故防止の注意点・推奨工具を簡潔に。` }, { inlineData: { mimeType: "image/jpeg", data: item.beforePhotos[0].split(',')[1] } }] }] })
+        const photoData = item.beforePhotos[0].includes(',') ? item.beforePhotos[0].split(',')[1] : item.beforePhotos[0];
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${activeApiKey}`, {
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            contents: [{ 
+              role: "user", 
+              parts: [
+                { text: `この現場の施工前写真を見て、作業時の危険ポイント（高所、電線、障害物、熱中症など）と推奨する安全装備・対策を3点箇条書きで分かりやすく回答してください。` }, 
+                { inlineData: { mimeType: "image/jpeg", data: photoData } }
+              ] 
+            }] 
+          })
         });
-        const d = await res.json(); resBox.innerHTML = `<strong class="text-purple-900"><i class="fa-solid fa-shield-halved"></i> AI診断:</strong><p>${d.candidates[0].content.parts[0].text}</p>`;
-      } catch (e) { resBox.innerHTML = 'AI診断失敗'; }
+        const d = await res.json(); 
+        resBox.innerHTML = `<strong class="text-purple-900 block font-bold mb-1"><i class="fa-solid fa-shield-halved mr-1"></i> AI現場安全診断:</strong><p class="whitespace-pre-line leading-relaxed">${d.candidates[0].content.parts[0].text}</p>`;
+      } catch (e) { 
+        console.error(e);
+        resBox.innerHTML = '<span class="text-rose-600 font-bold">AI診断の取得に失敗しました。時間をおいて再試行してください。</span>'; 
+      }
     }
 
     async function generateAiRefinedReportMemo() {
       const m = document.getElementById('formMemo');
-      if (!m.value.trim()) return showToast('下書きを入力してください');
+      if (!m.value.trim()) return showToast('推敲する下書きを入力してください');
       showToast('AI推敲中...');
       try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, { method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: `日報メモを推敲してください:\n${m.value}` }] }] }) });
-        const d = await res.json(); m.value = d.candidates[0].content.parts[0].text; showToast('推敲完了');
-      } catch(e) { showToast('推敲失敗'); }
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${activeApiKey}`, { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: `以下の現場日報メモを、報告書として簡潔明瞭で角の立たない丁寧なビジネス文言に推敲してください。余計な前置きは含めず、本文のみを回答してください:\n\n${m.value}` }] }] }) 
+        });
+        const d = await res.json(); 
+        m.value = d.candidates[0].content.parts[0].text.trim(); 
+        showToast('文章を推敲しました！');
+      } catch(e) { 
+        console.error(e);
+        showToast('推敲に失敗しました'); 
+      }
     }
 
-    const JAPANESE_HOLIDAYS = { '2026-01-01': '元日', '2026-01-12': '成人の日', '2026-02-11': '建国記念の日', '2026-02-23': '天皇誕生日', '2026-03-20': '春分の日', '2026-04-29': '昭和の日', '2026-05-03': '憲法記念日', '2026-05-04': 'みどりの日', '2026-05-05': 'こどもの日', '2026-05-06': '振替休日', '2026-07-20': '海の日', '2026-08-11': '山の日', '2026-09-21': '敬老の日', '2026-09-22': '国民の休日', '2026-09-23': '秋分の日', '2026-10-12': 'スポーツの日', '2026-11-03': '文化の日', '2026-11-23': '勤労感謝の日' };
+    const JAPANESE_HOLIDAYS = { 
+      '2026-01-01': '元日', '2026-01-12': '成人の日', '2026-02-11': '建国記念の日', '2026-02-23': '天皇誕生日', 
+      '2026-03-20': '春分の日', '2026-04-29': '昭和の日', '2026-05-03': '憲法記念日', '2026-05-04': 'みどりの日', 
+      '2026-05-05': 'こどもの日', '2026-05-06': '振替休日', '2026-07-20': '海の日', '2026-08-11': '山の日', 
+      '2026-09-21': '敬老の日', '2026-09-22': '国民の休日', '2026-09-23': '秋分の日', '2026-10-12': 'スポーツの日', 
+      '2026-11-03': '文化の日', '2026-11-23': '勤労感謝の日' 
+    };
     function getJapaneseHoliday(dateStr) { return JAPANESE_HOLIDAYS[dateStr] || null; }
 
     async function fetchKagawaWeather() {
@@ -1086,97 +1245,358 @@
         const res = await fetch('https://www.jma.go.jp/bosai/forecast/data/forecast/370000.json');
         const data = await res.json();
         const weekly = data[1].timeSeries[0];
-        weekly.timeDefines.forEach((t, i) => { const d=new Date(t); weeklyWeather[`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`] = { emoji: getWeatherEmoji(weekly.areas[0].weatherCodes[i]), pop: weekly.areas[0].pops?.[i] || '' }; });
+        weekly.timeDefines.forEach((t, i) => { 
+          const d = new Date(t); 
+          weeklyWeather[`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`] = { 
+            emoji: getWeatherEmoji(weekly.areas[0].weatherCodes[i]), 
+            pop: weekly.areas[0].pops?.[i] || '' 
+          }; 
+        });
         renderCalendarGrid();
       } catch (e) {}
     }
     const getWeatherEmoji = (c) => c?.startsWith('1') ? '☀️' : c?.startsWith('2') ? '☁️' : c?.startsWith('3') ? '☔' : c?.startsWith('4') ? '⛄' : '☁️';
 
     function renderReportList() {
-      const list = document.getElementById('reportCardList'); list.innerHTML = '';
+      const list = document.getElementById('reportCardList'); 
+      list.innerHTML = '';
       document.getElementById('reportBadgeCount').textContent = dailyReports.length;
       document.getElementById('reportTotalCount').textContent = `${dailyReports.length}件`;
-      if (!dailyReports.length) { list.innerHTML = `<p class="text-center text-xs text-slate-400 py-4">日報はありません</p>`; return; }
+      if (!dailyReports.length) { 
+        list.innerHTML = `<p class="text-center text-xs text-slate-400 py-6">提出済みの日報はありません</p>`; 
+        return; 
+      }
       dailyReports.forEach(r => {
-        const c = document.createElement('div'); c.className = 'p-3 bg-slate-50 border rounded-xl shadow-sm text-xs space-y-1';
-        c.innerHTML = `<div class="flex justify-between font-bold"><span>${r.siteName}</span><div class="space-x-1"><button onclick="editReportItem('${r.id}')" class="text-indigo-600 px-1">編集</button><button onclick="deleteReportItem('${r.id}')" class="text-rose-600 px-1">削除</button></div></div><div class="text-slate-500">${r.workDate} / ${r.workStatus}</div>`;
+        const team = TEAM_INFO[r.teamId] || { name: r.teamName || '班未定', color: 'bg-slate-700' };
+        const c = document.createElement('div'); 
+        c.className = 'p-3.5 bg-slate-50 border border-slate-200 rounded-2xl shadow-xs text-xs space-y-2';
+        c.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="flex items-center space-x-1.5 mb-1">
+                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded text-white ${team.color}">${team.name}</span>
+                <span class="font-bold text-slate-500 text-[11px]">${r.workDate}</span>
+                <span class="text-[10px] font-bold px-1.5 py-0.2 rounded ${r.workStatus === '完工' ? 'bg-emerald-100 text-emerald-800' : 'bg-indigo-100 text-indigo-800'}">${r.workStatus}</span>
+              </div>
+              <h4 class="font-bold text-slate-900 text-sm">${r.siteName}</h4>
+            </div>
+            <div class="flex items-center space-x-1">
+              <button onclick="copyReportAsFormText('${r.id}')" title="LINE・日報テキストをコピー" class="text-slate-500 hover:text-slate-800 p-1 bg-white border border-slate-200 rounded-lg text-xs"><i class="fa-regular fa-copy"></i></button>
+              <button onclick="editReportItem('${r.id}')" title="編集" class="text-indigo-600 hover:text-indigo-800 p-1 bg-white border border-slate-200 rounded-lg text-xs"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button onclick="deleteReportItem('${r.id}')" title="削除" class="text-rose-500 hover:text-rose-700 p-1 bg-white border border-slate-200 rounded-lg text-xs"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+          </div>
+          <div class="text-[11px] text-slate-600 grid grid-cols-2 gap-1 bg-white p-2 rounded-xl border border-slate-100">
+            <div>進捗: <strong>${r.progressRate || '-'}</strong></div>
+            <div>残材: <strong>${r.wasteAmount ? r.wasteAmount + 'kg' : '-'}</strong></div>
+            <div>外注費: <strong>${r.outsourceFee ? '¥' + Number(r.outsourceFee).toLocaleString() : 'なし'}</strong></div>
+            <div>害虫ブロック: <strong>${r.pestBlock ? '受注あり' : 'なし'}</strong></div>
+          </div>
+          ${r.memo ? `<div class="text-[11px] text-slate-600 bg-slate-100/80 p-2 rounded-xl border border-slate-200"><span class="font-bold text-slate-700">メモ:</span> ${r.memo}</div>` : ''}
+        `;
         list.appendChild(c);
       });
     }
 
+    function copyReportAsFormText(id) {
+      const r = dailyReports.find(x => x.id === id);
+      if (!r) return;
+      const team = TEAM_INFO[r.teamId]?.name || r.teamName || '';
+      const text = `【現場日報報告】\n■日付: ${r.workDate}\n■報告班: ${team}\n■現場名: ${r.siteName}\n■作業状況: ${r.workStatus} (${r.progressRate || '進捗未設定'})\n■人工: 吉井(${r.manpower?.yoshii || 0}), 藤井(${r.manpower?.fujii || 0}), 熊野(${r.manpower?.kumano || 0}), 久本(${r.manpower?.hisamoto || 0}), 高川(${r.manpower?.takagawa || 0})\n■残材量: ${r.wasteAmount ? r.wasteAmount + 'kg' : 'なし'}\n■外注費: ${r.outsourceFee ? r.outsourceFee + '円' : 'なし'}\n■機材①: ${r.equipment1?.join(', ') || 'なし'}\n■機材②: ${r.equipment2?.join(', ') || 'なし'}\n■最終確認: ${r.finalCheck || '-'}\n■特記・メモ: ${r.memo || 'なし'}\n■害虫ブロック: ${r.pestBlock ? '受注' : 'なし'}`;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('日報テキストをクリップボードにコピーしました！');
+      }).catch(() => {
+        showToast('コピーに失敗しました');
+      });
+    }
+
     function editReportItem(id) {
-       const r = dailyReports.find(x => x.id === id); if(!r) return;
+       const r = dailyReports.find(x => x.id === id); 
+       if(!r) return;
        editingReportId = id;
-       document.getElementById('formWorkDate').value = r.workDate;
-       document.getElementById('formSiteName').value = r.siteName;
+       
+       const teamRadio = document.querySelector(`input[name="formReportTeam"][value="${r.teamId}"]`);
+       if (teamRadio) teamRadio.checked = true;
+       
+       document.getElementById('formWorkDate').value = r.workDate || '';
+       document.getElementById('formSiteName').value = r.siteName || '';
+       document.getElementById('formEstimatePrice').value = r.estimatePrice || '';
+       
+       ['yoshii', 'fujii', 'kumano', 'hisamoto', 'takagawa'].forEach(name => {
+         const val = r.manpower?.[name] || '0';
+         const rad = document.querySelector(`input[name="manpower_${name}"][value="${val}"]`);
+         if (rad) rad.checked = true;
+       });
+
+       document.getElementById('formWasteAmount').value = r.wasteAmount || '';
+       document.getElementById('formOutsourceFee').value = r.outsourceFee || '';
+       document.getElementById('formOutsourceFeeSub').value = r.outsourceFeeSub || '';
+
+       document.querySelectorAll('input[name="equipment1"]').forEach(cb => {
+         cb.checked = (r.equipment1 || []).includes(cb.value);
+       });
+       document.querySelectorAll('input[name="equipment2"]').forEach(cb => {
+         cb.checked = (r.equipment2 || []).includes(cb.value);
+       });
+
+       const statusRad = document.querySelector(`input[name="formWorkStatus"][value="${r.workStatus}"]`);
+       if (statusRad) statusRad.checked = true;
+
+       document.getElementById('formProgressRate').value = r.progressRate || '50% (半日・中間)';
+       document.getElementById('formFinalCheck').value = r.finalCheck || '【確認済】すぐに請求書発送してください';
+       document.getElementById('formMemo').value = r.memo || '';
+       document.getElementById('formPestBlock').checked = !!r.pestBlock;
+
+       document.getElementById('submitReportBtnText').textContent = '日報の変更を更新する';
+       document.getElementById('cancelEditReportBtn').classList.remove('hidden');
        switchView('report');
+       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    function resetReportForm() { editingReportId = null; document.getElementById('formSiteName').value = ''; document.getElementById('formMemo').value = ''; }
-    function createReportFromSchedule(id) { const s = schedules.find(x=>x.id===id); if(!s)return; document.getElementById('formSiteName').value = s.customer; document.getElementById('formWorkDate').value = s.date; switchView('report'); closeScheduleDetailModal(); }
+
+    function cancelReportEdit() {
+      resetReportForm();
+    }
+
+    function resetReportForm() { 
+      editingReportId = null; 
+      document.getElementById('formSiteName').value = ''; 
+      document.getElementById('formEstimatePrice').value = ''; 
+      document.getElementById('formWasteAmount').value = ''; 
+      document.getElementById('formOutsourceFee').value = ''; 
+      document.getElementById('formOutsourceFeeSub').value = ''; 
+      document.getElementById('formMemo').value = ''; 
+      document.getElementById('formPestBlock').checked = false; 
+      document.getElementById('submitReportBtnText').textContent = '日報を登録・保存する';
+      document.getElementById('cancelEditReportBtn').classList.add('hidden');
+      ['yoshii', 'fujii', 'kumano', 'hisamoto', 'takagawa'].forEach(name => {
+        const rad = document.querySelector(`input[name="manpower_${name}"][value="0"]`);
+        if (rad) rad.checked = true;
+      });
+      document.querySelectorAll('input[name="equipment1"]').forEach(cb => cb.checked = false);
+      document.querySelectorAll('input[name="equipment2"]').forEach(cb => cb.checked = false);
+    }
+
+    function createReportFromSchedule(id) { 
+      const s = schedules.find(x=>x.id===id); 
+      if(!s) return; 
+      document.getElementById('formSiteName').value = s.customer; 
+      document.getElementById('formWorkDate').value = s.date; 
+      if (s.estimatePrice) document.getElementById('formEstimatePrice').value = s.estimatePrice;
+      const teamRad = document.querySelector(`input[name="formReportTeam"][value="${s.teamId}"]`);
+      if (teamRad) teamRad.checked = true;
+      switchView('report'); 
+      closeScheduleDetailModal(); 
+    }
+
+    function openAddScheduleModal() {
+      editingScheduleId = null;
+      document.getElementById('scheduleModalTitle').textContent = '現場スケジュールの追加';
+      document.getElementById('saveScheduleBtn').textContent = '登録する';
+      document.getElementById('modalSchedCustomer').value = '';
+      document.getElementById('modalSchedDate').value = selectedDateStr;
+      document.getElementById('modalSchedEndDate').value = selectedDateStr;
+      document.getElementById('modalSchedTime').value = '08:30';
+      document.getElementById('modalSchedEndTime').value = '17:00';
+      document.getElementById('modalSchedPrice').value = '';
+      document.getElementById('modalSchedLocation').value = '';
+      document.getElementById('modalSchedWarnings').value = '';
+      
+      const modal = document.getElementById('addScheduleModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
     function openEditScheduleModal(id) {
-        editingScheduleId = id;
-        const item = schedules.find(s => s.id === id);
-        if(!item) return;
-        document.getElementById('modalSchedCustomer').value = item.customer;
-        document.getElementById('modalSchedDate').value = item.date;
-        document.getElementById('modalSchedEndDate').value = item.endDate || item.date;
-        document.getElementById('modalSchedTime').value = item.time || '08:30';
-        document.getElementById('modalSchedEndTime').value = item.endTime || '17:00';
-        document.getElementById('modalSchedPrice').value = item.estimatePrice || '';
-        document.getElementById('addScheduleModal').classList.remove('hidden');
-        document.getElementById('addScheduleModal').classList.add('flex');
+      editingScheduleId = id;
+      const item = schedules.find(s => s.id === id);
+      if(!item) return;
+      document.getElementById('scheduleModalTitle').textContent = '現場スケジュールの編集';
+      document.getElementById('saveScheduleBtn').textContent = '更新する';
+      document.getElementById('modalSchedTeam').value = item.teamId;
+      document.getElementById('modalSchedCustomer').value = item.customer;
+      document.getElementById('modalSchedDate').value = item.date;
+      document.getElementById('modalSchedEndDate').value = item.endDate || item.date;
+      document.getElementById('modalSchedTime').value = item.time || '08:30';
+      document.getElementById('modalSchedEndTime').value = item.endTime || '17:00';
+      document.getElementById('modalSchedPrice').value = item.estimatePrice || '';
+      document.getElementById('modalSchedLocation').value = item.location || '';
+      document.getElementById('modalSchedWarnings').value = item.warnings || '';
+      
+      closeScheduleDetailModal();
+      const modal = document.getElementById('addScheduleModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
+
+    function closeAddScheduleModal() {
+      const modal = document.getElementById('addScheduleModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
     function autofillFromSelectedDaySchedule() {
-        const dayEvents = schedules.filter(s => isDateInRange(selectedDateStr, s.date, s.endDate));
-        if(dayEvents.length > 0) createReportFromSchedule(dayEvents[0].id);
+      const dayEvents = schedules.filter(s => isDateInRange(selectedDateStr, s.date, s.endDate));
+      if(dayEvents.length > 0) createReportFromSchedule(dayEvents[0].id);
+      else showToast('選択された日の現場予定はありません');
     }
+
     function autofillEstimatePriceFromSchedule() {
-        const d = document.getElementById('formWorkDate').value;
-        const s = document.getElementById('formSiteName').value;
-        const match = schedules.find(x => isDateInRange(d, x.date, x.endDate) || (s && x.customer.includes(s)));
-        if(match && match.estimatePrice) document.getElementById('formEstimatePrice').value = match.estimatePrice;
+      const d = document.getElementById('formWorkDate').value;
+      const s = document.getElementById('formSiteName').value.trim();
+      const match = schedules.find(x => isDateInRange(d, x.date, x.endDate) || (s && x.customer.includes(s)));
+      if(match && match.estimatePrice) {
+        document.getElementById('formEstimatePrice').value = match.estimatePrice;
+        showToast(`予定から金額(¥${Number(match.estimatePrice).toLocaleString()})を反映しました`);
+      } else {
+        showToast('該当する見積価格が見つかりません');
+      }
     }
+
     function openGoogleMapNav() {
-        const item = schedules.find(s => s.id === currentDetailScheduleId);
-        if(item && item.location) window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.location)}`, '_blank');
+      const item = schedules.find(s => s.id === currentDetailScheduleId);
+      if(item && item.location) {
+        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.location)}`, '_blank');
+      } else {
+        showToast('住所が入力されていません');
+      }
     }
+
     function exportDataToFile() {
-        const str = JSON.stringify({ schedules, dailyReports });
-        const blob = new Blob([str], { type: 'application/json' });
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'backup.json'; a.click();
+      const str = JSON.stringify({ schedules, dailyReports }, null, 2);
+      const blob = new Blob([str], { type: 'application/json' });
+      const a = document.createElement('a'); 
+      a.href = URL.createObjectURL(blob); 
+      a.download = `現場データバックアップ_${realTodayStr}.json`; 
+      a.click();
+      showToast('バックアップファイルを保存しました');
     }
+
     function triggerImportData() { document.getElementById('importFileInput').click(); }
+    
     function handleDataImport(e) {
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-            const data = JSON.parse(evt.target.result);
-            if(data.schedules) schedules = data.schedules;
-            if(data.dailyReports) dailyReports = data.dailyReports;
-            saveDataToStorage(); renderAll(); showToast('復元完了');
-        };
-        reader.readAsText(e.target.files[0]);
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        try {
+          const data = JSON.parse(evt.target.result);
+          if(data.schedules) schedules = data.schedules;
+          if(data.dailyReports) dailyReports = data.dailyReports;
+          saveDataToStorage(); 
+          if(db) {
+            schedules.forEach(s => db.collection("schedules").doc(s.id).set(s));
+            dailyReports.forEach(r => db.collection("reports").doc(r.id).set(r));
+          }
+          renderAll(); 
+          showToast('復元が完了しました！');
+        } catch(err) {
+          showToast('JSONファイルの形式が不正です');
+        }
+      };
+      if (e.target.files[0]) reader.readAsText(e.target.files[0]);
     }
-    let currentUploadedBase64 = null;
+
     let currentUploadedFullBase64 = null;
-    function openAiScanModal() { document.getElementById('aiScanModal').classList.remove('hidden'); document.getElementById('aiScanModal').classList.add('flex'); }
-    function closeAiScanModal() { document.getElementById('aiScanModal').classList.add('hidden'); document.getElementById('aiScanModal').classList.remove('flex'); }
-    function triggerFileInput() { document.getElementById('estimateFileInput').click(); }
-    async function handleFileSelect(event) {
-        const file = event.target.files[0]; if(!file) return;
-        document.getElementById('dropArea').classList.add('hidden'); document.getElementById('previewContainer').classList.remove('hidden');
-        document.getElementById('aiLoadingOverlay').classList.remove('hidden');
-        const compressed = await compressImageFile(file, 1000, 0.75);
-        currentUploadedFullBase64 = compressed;
-        document.getElementById('previewImage').src = compressed;
-        runGeminiExtraction(compressed.split(',')[1], 'image/jpeg');
+    function openAiScanModal() { 
+      document.getElementById('dropArea').classList.remove('hidden');
+      document.getElementById('previewContainer').classList.add('hidden');
+      document.getElementById('extractionResults').classList.add('hidden');
+      document.getElementById('aiDate').value = selectedDateStr;
+      document.getElementById('aiEndDate').value = selectedDateStr;
+      document.getElementById('aiTime').value = '08:30';
+      document.getElementById('aiEndTime').value = '17:00';
+      const modal = document.getElementById('aiScanModal');
+      modal.classList.remove('hidden'); 
+      modal.classList.add('flex'); 
     }
-    function toggleOptionsMenu() { document.getElementById('optionsMenuModal').classList.toggle('hidden'); document.getElementById('optionsMenuModal').classList.toggle('flex'); }
-    function saveGasWebhookUrl(val) { gasWebhookUrl = val; localStorage.setItem('GAS_WEBHOOK_URL', val); updateGasSyncBadge(); }
-    function updateGasSyncBadge() { document.getElementById('gasSyncBadge').classList.toggle('hidden', !gasWebhookUrl); }
-    function switchView(mode) { document.getElementById('view-calendar-container').classList.toggle('hidden', mode!=='calendar'); document.getElementById('view-report-container').classList.toggle('hidden', mode!=='report'); }
-    function togglePwaInstallGuide() { document.getElementById('pwaInstallGuideModal').classList.toggle('hidden'); document.getElementById('pwaInstallGuideModal').classList.toggle('flex'); }
-    function toggleGasGuideModal() { document.getElementById('gasGuideModal').classList.toggle('hidden'); document.getElementById('gasGuideModal').classList.toggle('flex'); }
-    function copyReportAsFormText(id) { /* implement logic */ }
+    
+    function closeAiScanModal() { 
+      const modal = document.getElementById('aiScanModal');
+      modal.classList.add('hidden'); 
+      modal.classList.remove('flex'); 
+    }
+    
+    function triggerFileInput() { document.getElementById('estimateFileInput').click(); }
+    
+    async function handleFileSelect(event) {
+      const file = event.target.files[0]; 
+      if(!file) return;
+      processEstimateFile(file);
+    }
+
+    async function processEstimateFile(file) {
+      document.getElementById('dropArea').classList.add('hidden'); 
+      document.getElementById('previewContainer').classList.remove('hidden');
+      document.getElementById('aiLoadingOverlay').classList.remove('hidden');
+      const compressed = await compressImageFile(file, 1000, 0.75);
+      currentUploadedFullBase64 = compressed;
+      document.getElementById('previewImage').src = compressed;
+      runGeminiExtraction(compressed.split(',')[1], 'image/jpeg');
+    }
+
+    function toggleOptionsMenu() { 
+      const m = document.getElementById('optionsMenuModal');
+      m.classList.toggle('hidden'); 
+      m.classList.toggle('flex'); 
+    }
+
+    function togglePwaInstallGuide() {
+      const m = document.getElementById('pwaInstallGuideModal');
+      m.classList.toggle('hidden');
+      m.classList.toggle('flex');
+    }
+
+    function toggleGasGuideModal() {
+      const m = document.getElementById('gasGuideModal');
+      m.classList.toggle('hidden');
+      m.classList.toggle('flex');
+    }
+
+    function saveGasWebhookUrl(val) { 
+      gasWebhookUrl = val.trim(); 
+      localStorage.setItem('GAS_WEBHOOK_URL', gasWebhookUrl); 
+      updateGasSyncBadge(); 
+      showToast('スプシWebhook URLを保存しました');
+    }
+
+    function saveCustomApiKey(val) {
+      activeApiKey = val.trim() || DEFAULT_API_KEY;
+      localStorage.setItem('CUSTOM_GEMINI_KEY', val.trim());
+      showToast('APIキー設定を保存しました');
+    }
+
+    function updateGasSyncBadge() { 
+      document.getElementById('gasSyncBadge').classList.toggle('hidden', !gasWebhookUrl); 
+    }
+
+    function switchView(mode) { 
+      currentViewMode = mode;
+      document.getElementById('view-calendar-container').classList.toggle('hidden', mode!=='calendar'); 
+      document.getElementById('view-report-container').classList.toggle('hidden', mode!=='report'); 
+      
+      const tabCal = document.getElementById('viewTab-calendar');
+      const tabRep = document.getElementById('viewTab-report');
+      if (mode === 'calendar') {
+        tabCal.className = "py-2.5 text-xs sm:text-sm font-bold border-b-2 border-emerald-600 text-emerald-600 flex items-center justify-center space-x-1.5 transition-all";
+        tabRep.className = "py-2.5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-600 flex items-center justify-center space-x-1.5 transition-all";
+      } else {
+        tabCal.className = "py-2.5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-600 flex items-center justify-center space-x-1.5 transition-all";
+        tabRep.className = "py-2.5 text-xs sm:text-sm font-bold border-b-2 border-emerald-600 text-emerald-600 flex items-center justify-center space-x-1.5 transition-all";
+      }
+    }
+
+    function openImageLightbox(src, title = '画像拡大') {
+      const modal = document.getElementById('imageLightboxModal');
+      document.getElementById('lightboxImage').src = src;
+      document.getElementById('lightboxTitle').textContent = title;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeImageLightbox() {
+      const modal = document.getElementById('imageLightboxModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
   </script>
 </body>
 </html>
